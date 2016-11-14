@@ -10,8 +10,12 @@
     }
   },
   "scripts": {
+    "lint": "jshint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nathan Hill",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jshint": "^2.9.4"
+  }
 }
