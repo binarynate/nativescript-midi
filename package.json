@@ -11,7 +11,7 @@
   },
   "scripts": {
     "lint": "jshint src",
-    "build": "npm run lint && babel src --out-dir dist",
+    "build": "npm run lint && rm -rf dist && babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nathan Hill",

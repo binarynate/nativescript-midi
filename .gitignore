@@ -1,3 +1,4 @@
+# Don't add dist/ to this list, or else tns won't copy the folder over when it installs the plugin
+
 .DS_Store
 node_modules
-dist
