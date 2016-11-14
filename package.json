@@ -2,7 +2,7 @@
   "name": "nativescript-midi",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/midi.js",
   "nativescript": {
     "platforms": {
       "android": "2.3.0",
