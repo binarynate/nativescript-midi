@@ -37,7 +37,7 @@ var MidiClient = function () {
 
             return Promise.resolve().then(function () {
 
-                var midiDevices = _this._midiClient.sources.map(function (_ref) {
+                var midiDevices = Array.from(_this._midiClient.sources).map(function (_ref) {
                     var name = _ref.name;
                     return { name: name, isSource: true };
                 });

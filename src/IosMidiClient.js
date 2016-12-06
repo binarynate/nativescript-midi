@@ -4,7 +4,6 @@ import MidiDevice from './MidiDevice';
 export default class MidiClient {
 
     constructor() {
-
         this._midiClient = new PGMidi();
         this._midiClient.networkEnabled = true;
         this._midiClient.virtualDestinationEnabled = true;
@@ -19,7 +18,7 @@ export default class MidiClient {
         return Promise.resolve()
         .then(() => {
 
-            let midiDevices = this._midiClient.sources.map(({ name }) => ({ name, isSource: true }));
+            let midiDevices = Array.from(this._midiClient.sources).map(({ name }) => ({ name, isSource: true }));
 
             for (let { name } of this._midiClient.destinations) {
 
