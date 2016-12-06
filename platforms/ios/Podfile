@@ -1,0 +1,1 @@
+pod 'PGMidi', :git => 'https://github.com/petegoodliffe/PGMidi.git'
