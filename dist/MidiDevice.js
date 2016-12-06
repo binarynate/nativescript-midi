@@ -23,7 +23,7 @@ function MidiDevice() {
 
     _classCallCheck(this, MidiDevice);
 
-    Object.assign(this, _lodash2.default.pick(options, ['name', 'description']));
+    Object.assign(this, _lodash2.default.pick(options, ['name', 'description', 'isSource', 'isDestination']));
 };
 
 exports.default = MidiDevice;

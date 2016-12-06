@@ -10,7 +10,9 @@ export default class MidiDevice {
 
         Object.assign(this, _.pick(options, [
             'name',
-            'description'
+            'description',
+            'isSource',
+            'isDestination'
         ]));
     }
 }
