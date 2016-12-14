@@ -1,9 +1,16 @@
 /*globals PGMidi */
 import MidiDevice from './MidiDevice';
+import MockLogger from './MockLogger';
 
 export default class MidiClient {
 
-    constructor() {
+    /**
+    * @param {Object} [options]
+    * @param {Object} [options.logger] - optional logger that implements the Winston logging
+    *                                    interface.
+    */
+    constructor(options = {}) {
+        this.logger = options.logger || new MockLogger();
         this._midiClient = new PGMidi();
         this._midiClient.networkEnabled = true;
         this._midiClient.virtualDestinationEnabled = true;
@@ -18,24 +25,20 @@ export default class MidiClient {
         return Promise.resolve()
         .then(() => {
 
-            let midiDevices = Array.from(this._midiClient.sources).map(({ name }) => ({ name, isSource: true }));
+            let midiDevices = Array.from(this._midiClient.sources).map(source => ({ source, name: source.name }));
 
-            for (let { name } of this._midiClient.destinations) {
+            for (let destination of this._midiClient.destinations) {
 
-                let device = midiDevices.find(d => d.name === name);
+                let device = midiDevices.find(d => d.name === destination.name);
 
                 if (device) {
-                    device.isDestination = true;
+                    device.destination = destination;
                 } else {
-                    midiDevices.push({ name, isDestination: true, isSource: false });
+                    midiDevices.push({ destination, name: destination.name });
                 }
             }
 
-            if (midiDevices.length) {
-                return midiDevices.map(m => new MidiDevice(m));
-            }
-
-            return [ new MidiDevice({ name: 'No devices found' })];
+            return midiDevices.map(deviceInfo => new MidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
         });
     }
 }

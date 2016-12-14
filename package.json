@@ -20,5 +20,8 @@
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
     "jshint": "^2.9.4"
+  },
+  "dependencies": {
+    "parameter-validator": "git+ssh://git@bitbucket.org/binarynate/parameter-validator.git"
   }
 }

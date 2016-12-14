@@ -1,5 +1,11 @@
 import _ from 'lodash';
+import ParameterValidator from 'parameter-validator';
 
+/**
+* @property {string}  name
+* @property {boolean} isSource
+* @property {boolean} isDestination
+*/
 export default class MidiDevice {
 
     /**
@@ -10,9 +16,20 @@ export default class MidiDevice {
 
         Object.assign(this, _.pick(options, [
             'name',
-            'description',
             'isSource',
             'isDestination'
         ]));
+    }
+
+    /**
+    * Connects to the MIDI device in order to be able to receive messages from it.
+    *
+    * @param   {Object}   options
+    * @param   {Function} options.messageHandler - Function that handles an incoming MIDI message
+    * @returns {Promise}
+    */
+    connect(options) {
+
+        return this.parameterValidator.validateAsync(options, [ 'messageHandler' ]);
     }
 }
