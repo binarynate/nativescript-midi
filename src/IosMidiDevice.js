@@ -17,7 +17,7 @@ export default class IosMidiDevice extends MidiDevice {
         super(options);
         this.parameterValidator = new ParameterValidator();
         this.parameterValidator.validate(options, [ 'name', [ 'source', 'destination' ]]);
-        this.name = name;
+        this.name = options.name;
         this._source = options.source;
         this._destination = options.destination;
         this.logger = options.logger || new MockLogger();
