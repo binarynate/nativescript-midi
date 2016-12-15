@@ -1,5 +1,5 @@
 /*globals PGMidi */
-import MidiDevice from './MidiDevice';
+import MidiDevice from './IosMidiDevice';
 import MockLogger from './MockLogger';
 
 export default class MidiClient {
