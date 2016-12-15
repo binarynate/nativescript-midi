@@ -45,7 +45,7 @@ var IosMidiDevice = function (_MidiDevice) {
 
         _this.parameterValidator = new _parameterValidator2.default();
         _this.parameterValidator.validate(options, ['name', ['source', 'destination']]);
-        _this.name = name;
+        _this.name = options.name;
         _this._source = options.source;
         _this._destination = options.destination;
         _this.logger = options.logger || new _MockLogger2.default();
