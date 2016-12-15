@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import ParameterValidator from 'parameter-validator';
 import MidiDevice from './MidiDevice';
 import { MidiError } from './errors';
@@ -40,17 +39,31 @@ export default class IosMidiDevice extends MidiDevice {
     connect(options) {
 
         return this.parameterValidator.validateAsync(options, [ 'messageHandler' ])
-        .then(() => {
+        .then(({ messageHandler }) => {
 
-            if (this.source) {
+            if (this._source) {
                 this.messageHandler = messageHandler;
-                this.source.addDelegate(self);
+                this._source.addDelegate(this);
             }
         });
     }
 
-    send() {
+    /**
+    * @param {Object}          options
+    * @param {interop.Pointer} options.pointer - NativeScript pointer to the buffer containing the message
+    * @param {number}          options.size  - Number of bytes
+    */
+    send(options) {
 
+        return this.parameterValidator.validateAsync(options, [ 'pointer', 'size' ])
+        .then(({ pointer, size }) => {
+
+            if (!this._destination) {
+                throw new MidiError(`Can't send a message to the MIDI device '${this.name}', because it's not a destination.`);
+            }
+
+            this._destination.sendBytesSize(pointer, size);
+        });
     }
 
     /**
@@ -58,8 +71,7 @@ export default class IosMidiDevice extends MidiDevice {
     *
     * @private
     */
-    midiSourceMidiReceived(input, packetList) {
-        this.logger.info('MIDI packetlist received!')
+    midiSourceMidiReceived(/* input, packetList */) {
+        this.logger.info('MIDI packetlist received!');
     }
-
 }
