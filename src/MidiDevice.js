@@ -14,6 +14,7 @@ export default class MidiDevice {
     */
     constructor(options = {}) {
 
+        this.parameterValidator = new ParameterValidator();
         Object.assign(this, _.pick(options, [
             'name',
             'isSource',

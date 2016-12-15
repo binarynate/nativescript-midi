@@ -11,14 +11,27 @@ var _MidiDevice = require('./MidiDevice');
 
 var _MidiDevice2 = _interopRequireDefault(_MidiDevice);
 
+var _MockLogger = require('./MockLogger');
+
+var _MockLogger2 = _interopRequireDefault(_MockLogger);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MidiClient = function () {
+
+    /**
+    * @param {Object} [options]
+    * @param {Object} [options.logger] - optional logger that implements the Winston logging
+    *                                    interface.
+    */
     function MidiClient() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
         _classCallCheck(this, MidiClient);
 
+        this.logger = options.logger || new _MockLogger2.default();
         this._midiClient = new PGMidi();
         this._midiClient.networkEnabled = true;
         this._midiClient.virtualDestinationEnabled = true;
@@ -37,9 +50,8 @@ var MidiClient = function () {
 
             return Promise.resolve().then(function () {
 
-                var midiDevices = Array.from(_this._midiClient.sources).map(function (_ref) {
-                    var name = _ref.name;
-                    return { name: name, isSource: true };
+                var midiDevices = Array.from(_this._midiClient.sources).map(function (source) {
+                    return { source: source, name: source.name };
                 });
 
                 var _iteratorNormalCompletion = true;
@@ -48,17 +60,17 @@ var MidiClient = function () {
 
                 try {
                     var _loop = function _loop() {
-                        var name = _step.value.name;
+                        var destination = _step.value;
 
 
                         var device = midiDevices.find(function (d) {
-                            return d.name === name;
+                            return d.name === destination.name;
                         });
 
                         if (device) {
-                            device.isDestination = true;
+                            device.destination = destination;
                         } else {
-                            midiDevices.push({ name: name, isDestination: true, isSource: false });
+                            midiDevices.push({ destination: destination, name: destination.name });
                         }
                     };
 
@@ -80,13 +92,9 @@ var MidiClient = function () {
                     }
                 }
 
-                if (midiDevices.length) {
-                    return midiDevices.map(function (m) {
-                        return new _MidiDevice2.default(m);
-                    });
-                }
-
-                return [new _MidiDevice2.default({ name: 'No devices found' })];
+                return midiDevices.map(function (deviceInfo) {
+                    return new _MidiDevice2.default(Object.assign(deviceInfo, { logger: _this.logger }));
+                });
             });
         }
     }]);
