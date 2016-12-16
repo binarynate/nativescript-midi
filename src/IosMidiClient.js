@@ -1,5 +1,5 @@
 /*globals PGMidi */
-import MidiDevice from './IosMidiDevice';
+import IosMidiDevice from './IosMidiDevice';
 import MockLogger from './MockLogger';
 
 export default class MidiClient {
@@ -38,7 +38,7 @@ export default class MidiClient {
                 }
             }
 
-            return midiDevices.map(deviceInfo => new MidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
+            return midiDevices.map(deviceInfo => new IosMidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
         });
     }
 }
