@@ -63,6 +63,7 @@ export default class IosMidiDevice extends MidiDevice {
             if (!this._destination) {
                 throw new MidiError(`Can't send a message to the MIDI device '${this.name}', because it's not a destination.`);
             }
+
             this._log(`Sending MIDI message bytes...`);
             this._destination.sendBytesSize(pointer, size);
             this._log(`Finished sending MIDI message bytes.`);

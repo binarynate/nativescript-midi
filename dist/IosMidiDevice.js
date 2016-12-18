@@ -96,6 +96,7 @@ var IosMidiDevice = function (_MidiDevice) {
                 if (!_this3._destination) {
                     throw new _errors.MidiError('Can\'t send a message to the MIDI device \'' + _this3.name + '\', because it\'s not a destination.');
                 }
+
                 _this3._log('Sending MIDI message bytes...');
                 _this3._destination.sendBytesSize(pointer, size);
                 _this3._log('Finished sending MIDI message bytes.');
