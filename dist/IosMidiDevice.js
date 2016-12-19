@@ -26,7 +26,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* globals PGMidiSourceDelegate, NSObject */
+
 
 var IosMidiDevice = function (_MidiDevice) {
     _inherits(IosMidiDevice, _MidiDevice);
@@ -71,16 +72,28 @@ var IosMidiDevice = function (_MidiDevice) {
 
 
                 if (_this2._source) {
-                    _this2.messageHandler = messageHandler;
-                    _this2._source.addDelegate(_this2);
+
+                    _this2.logger.info('Adding MIDI message delegate for device \'' + _this2.name + '\'...');
+
+                    var delegate = NSObject.extend({
+                        midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
+                            this.logger.info('MIDI packetlist received!');
+                            messageHandler(midiSource, packetList);
+                        },
+
+
+                        protocols: [PGMidiSourceDelegate]
+                    });
+
+                    _this2._source.addDelegate(delegate);
                 }
             });
         }
 
         /**
-        * @param {Object}          options
-        * @param {interop.Pointer} options.pointer - NativeScript pointer to the buffer containing the message
-        * @param {number}          options.size  - Number of bytes
+        * @param {Object}            options
+        * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
+        * @param {number}            options.length - Number of bytes
         */
 
     }, {
@@ -88,9 +101,9 @@ var IosMidiDevice = function (_MidiDevice) {
         value: function send(options) {
             var _this3 = this;
 
-            return this.parameterValidator.validateAsync(options, ['pointer', 'size']).then(function (_ref2) {
-                var pointer = _ref2.pointer,
-                    size = _ref2.size;
+            return this.parameterValidator.validateAsync(options, ['bytes', 'length']).then(function (_ref2) {
+                var bytes = _ref2.bytes,
+                    length = _ref2.length;
 
 
                 if (!_this3._destination) {
@@ -98,26 +111,14 @@ var IosMidiDevice = function (_MidiDevice) {
                 }
 
                 _this3._log('Sending MIDI message bytes...');
-                _this3._destination.sendBytesSize(pointer, size);
+                _this3._destination.sendBytesSize(bytes, length);
                 _this3._log('Finished sending MIDI message bytes.');
             });
-        }
-
-        /**
-        * Implemented for the PGMidiSourceDelegate interface.
-        *
-        * @private
-        */
-
-    }, {
-        key: 'midiSourceMidiReceived',
-        value: function midiSourceMidiReceived() /* input, packetList */{
-            this.logger.info('MIDI packetlist received!');
         }
     }, {
         key: '_log',
         value: function _log(message, metadata) {
-            this.logger.info(this.constructor.name + ': ' + message, metadata);
+            this.logger.info(this.constructor.name + '::' + this.name + ': ' + message, metadata);
         }
     }, {
         key: 'isSource',

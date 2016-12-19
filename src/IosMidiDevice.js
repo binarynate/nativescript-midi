@@ -1,3 +1,4 @@
+/* globals PGMidiSourceDelegate, NSObject */
 import ParameterValidator from 'parameter-validator';
 import MidiDevice from './MidiDevice';
 import { MidiError } from './errors';
@@ -44,42 +45,44 @@ export default class IosMidiDevice extends MidiDevice {
         .then(({ messageHandler }) => {
 
             if (this._source) {
-                this.messageHandler = messageHandler;
-                this._source.addDelegate(this);
+
+                this.logger.info(`Adding MIDI message delegate for device '${this.name}'...`);
+
+                let delegate = NSObject.extend({
+                    midiSourceMidiReceived(midiSource, packetList) {
+                        this.logger.info('MIDI packetlist received!');
+                        messageHandler(midiSource, packetList);
+                    },
+
+                    protocols: [ PGMidiSourceDelegate ]
+                });
+
+                this._source.addDelegate(delegate);
             }
         });
     }
 
     /**
-    * @param {Object}          options
-    * @param {interop.Pointer} options.pointer - NativeScript pointer to the buffer containing the message
-    * @param {number}          options.size  - Number of bytes
+    * @param {Object}            options
+    * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
+    * @param {number}            options.length - Number of bytes
     */
     send(options) {
 
-        return this.parameterValidator.validateAsync(options, [ 'pointer', 'size' ])
-        .then(({ pointer, size }) => {
+        return this.parameterValidator.validateAsync(options, [ 'bytes', 'length' ])
+        .then(({ bytes, length }) => {
 
             if (!this._destination) {
                 throw new MidiError(`Can't send a message to the MIDI device '${this.name}', because it's not a destination.`);
             }
 
             this._log(`Sending MIDI message bytes...`);
-            this._destination.sendBytesSize(pointer, size);
+            this._destination.sendBytesSize(bytes, length);
             this._log(`Finished sending MIDI message bytes.`);
         });
     }
 
-    /**
-    * Implemented for the PGMidiSourceDelegate interface.
-    *
-    * @private
-    */
-    midiSourceMidiReceived(/* input, packetList */) {
-        this.logger.info('MIDI packetlist received!');
-    }
-
     _log(message, metadata) {
-        this.logger.info(`${this.constructor.name}: ${message}`, metadata);
+        this.logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
 }
