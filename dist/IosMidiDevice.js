@@ -72,29 +72,33 @@ var IosMidiDevice = function (_MidiDevice) {
 
 
                 if (_this2._source) {
+                    (function () {
 
-                    _this2.logger.info('Adding MIDI message delegate for device \'' + _this2.name + '\'...');
+                        _this2.logger.info('Adding MIDI message delegate for device \'' + _this2.name + '\'...');
+                        var logger = _this2.logger;
 
-                    var MidiMessageDelegate = NSObject.extend({
-                        midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
-                            this.logger.info('MIDI packetlist received!');
-                            messageHandler(midiSource, packetList);
-                        }
-                    }, {
-                        protocols: [PGMidiSourceDelegate],
-                        exposedMethods: [{
-                            midiSourceMidiReceived: {
-                                returns: interop.types.void,
-                                params: [PGMidiSource, MIDIPacketList]
+
+                        var MidiMessageDelegate = NSObject.extend({
+                            midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
+                                logger.info('MIDI packetlist received!');
+                                messageHandler(midiSource, packetList);
                             }
-                        }]
-                    });
+                        }, {
+                            protocols: [PGMidiSourceDelegate],
+                            exposedMethods: [{
+                                midiSourceMidiReceived: {
+                                    returns: interop.types.void,
+                                    params: [PGMidiSource, new interop.types.ReferenceType(MIDIPacketList)]
+                                }
+                            }]
+                        });
 
-                    // Save a reference to the delegate so that it doesn't get garbage collected.
-                    _this2._midiMessageDelegate = new MidiMessageDelegate();
+                        // Save a reference to the delegate so that it doesn't get garbage collected.
+                        _this2._midiMessageDelegate = new MidiMessageDelegate();
 
-                    _this2._source.addDelegate(_this2._midiMessageDelegate);
-                    _this2.logger.info('MIDI message delegate added successfully.');
+                        _this2._source.addDelegate(_this2._midiMessageDelegate);
+                        _this2.logger.info('MIDI message delegate added successfully.');
+                    })();
                 }
             });
         }

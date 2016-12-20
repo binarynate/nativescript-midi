@@ -47,10 +47,11 @@ export default class IosMidiDevice extends MidiDevice {
             if (this._source) {
 
                 this.logger.info(`Adding MIDI message delegate for device '${this.name}'...`);
+                let { logger } = this;
 
                 let MidiMessageDelegate = NSObject.extend({
                     midiSourceMidiReceived(midiSource, packetList) {
-                        this.logger.info('MIDI packetlist received!');
+                        logger.info('MIDI packetlist received!');
                         messageHandler(midiSource, packetList);
                     },
                 }, {
@@ -59,7 +60,7 @@ export default class IosMidiDevice extends MidiDevice {
                         {
                             midiSourceMidiReceived: {
                                 returns: interop.types.void,
-                                params: [ PGMidiSource, MIDIPacketList ]
+                                params: [ PGMidiSource, new interop.types.ReferenceType(MIDIPacketList) ]
                             }
                         }
                     ]
