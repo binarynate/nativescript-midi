@@ -1,1 +1,2 @@
 pod 'PGMidi', :git => 'https://github.com/petegoodliffe/PGMidi.git'
+pod 'cocoa-midi-wrapper', :git => 'git@bitbucket.org:binarynate/cocoa-midi-wrapper.git'
