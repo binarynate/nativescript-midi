@@ -22,6 +22,6 @@
     "jshint": "^2.9.4"
   },
   "dependencies": {
-    "parameter-validator": "git+ssh://git@bitbucket.org/binarynate/parameter-validator.git"
+    "parameter-validator": "git@github.com:MyPureCloud/parameter-validator.git"
   }
 }

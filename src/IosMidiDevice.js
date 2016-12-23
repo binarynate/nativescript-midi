@@ -1,8 +1,9 @@
-/* globals PGMidiSourceDelegate, NSObject, interop, PGMidiSource, MIDIPacketList */
+/* globals PGMidiSourceDelegate, NSObject, interop, PGMidiSource, MIDIPacketList, SDMidiUtils */
 import ParameterValidator from 'parameter-validator';
 import MidiDevice from './MidiDevice';
 import { MidiError } from './errors';
 import MockLogger from './MockLogger';
+import MidiMessageDelegate from './ios/MidiMessageDelegate';
 
 export default class IosMidiDevice extends MidiDevice {
 
@@ -47,28 +48,9 @@ export default class IosMidiDevice extends MidiDevice {
             if (this._source) {
 
                 this.logger.info(`Adding MIDI message delegate for device '${this.name}'...`);
-                let { logger } = this;
-
-                let MidiMessageDelegate = NSObject.extend({
-                    midiSourceMidiReceived(midiSource, packetList) {
-                        logger.info('MIDI packetlist received!');
-                        messageHandler(midiSource, packetList);
-                    },
-                }, {
-                    protocols: [ PGMidiSourceDelegate ],
-                    exposedMethods: [
-                        {
-                            midiSourceMidiReceived: {
-                                returns: interop.types.void,
-                                params: [ PGMidiSource, new interop.types.ReferenceType(MIDIPacketList) ]
-                            }
-                        }
-                    ]
-                });
 
                 // Save a reference to the delegate so that it doesn't get garbage collected.
-                this._midiMessageDelegate = new MidiMessageDelegate();
-
+                this._midiMessageDelegate = MidiMessageDelegate.alloc().initWithOptions(this.logger, messageHandler);
                 this._source.addDelegate(this._midiMessageDelegate);
                 this.logger.info('MIDI message delegate added successfully.');
             }
