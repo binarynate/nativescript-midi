@@ -9,8 +9,9 @@ var _parameterValidator = require('parameter-validator');
 var MidiMessageDelegate = NSObject.extend({
     initWithOptions: function initWithOptions(logger, messageHandler) {
 
-        this.super.init();
+        var self = this.super.init();
         (0, _parameterValidator.validate)({ logger: logger, messageHandler: messageHandler }, ['logger', 'messageHandler'], this);
+        return self;
     },
     midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
 

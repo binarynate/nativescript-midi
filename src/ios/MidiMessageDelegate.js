@@ -5,8 +5,9 @@ const MidiMessageDelegate = NSObject.extend({
 
     initWithOptions(logger, messageHandler) {
 
-        this.super.init();
+        let self = this.super.init();
         validate({ logger, messageHandler }, [ 'logger', 'messageHandler' ], this);
+        return self;
     },
 
     midiSourceMidiReceived(midiSource, packetList) {
