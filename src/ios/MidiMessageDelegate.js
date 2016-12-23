@@ -1,7 +1,7 @@
-/* globals NSObject, PGMidiSource, MIDIPacketList, interop */
+/* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiUtils */
 import { validate } from 'parameter-validator';
 
-export default const MidiMessageDelegate = NSObject.extend({
+const MidiMessageDelegate = NSObject.extend({
 
     initWithOptions(logger, messageHandler) {
 
@@ -32,16 +32,16 @@ export default const MidiMessageDelegate = NSObject.extend({
 
         for (let packet of packets) {
 
-            for (let packetByteIndex = 0; packetByteIndex < packet.length) {
+            for (let packetByteIndex = 0; packetByteIndex < packet.length; packetByteIndex++) {
 
                 let bytePointer = packet.bytes.add(packetByteIndex),
-                    byteReference = new interop.Reference(interop.types.uint8, packet.bytes.add(byteIndex));
+                    byteReference = new interop.Reference(interop.types.uint8, bytePointer);
 
                 aggregatedBytes[aggregatedBytesIndex++] = byteReference.value;
             }
         }
         return aggregatedBytes;
-    }
+    },
 
     _log(message, metadata) {
         this.logger.info(`MidiMessageDelegate: ${message}`, metadata);
@@ -58,6 +58,8 @@ export default const MidiMessageDelegate = NSObject.extend({
         }
     ]
 });
+
+export default MidiMessageDelegate;
 
 function convertNsArrayToArray(nsArray) {
 

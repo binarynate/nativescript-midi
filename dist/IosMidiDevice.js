@@ -20,14 +20,17 @@ var _MockLogger = require('./MockLogger');
 
 var _MockLogger2 = _interopRequireDefault(_MockLogger);
 
+var _MidiMessageDelegate = require('./ios/MidiMessageDelegate');
+
+var _MidiMessageDelegate2 = _interopRequireDefault(_MidiMessageDelegate);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* globals PGMidiSourceDelegate, NSObject, interop, PGMidiSource, MIDIPacketList */
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var IosMidiDevice = function (_MidiDevice) {
     _inherits(IosMidiDevice, _MidiDevice);
@@ -72,33 +75,13 @@ var IosMidiDevice = function (_MidiDevice) {
 
 
                 if (_this2._source) {
-                    (function () {
 
-                        _this2.logger.info('Adding MIDI message delegate for device \'' + _this2.name + '\'...');
-                        var logger = _this2.logger;
+                    _this2.logger.info('Adding MIDI message delegate for device \'' + _this2.name + '\'...');
 
-
-                        var MidiMessageDelegate = NSObject.extend({
-                            midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
-                                logger.info('MIDI packetlist received!');
-                                messageHandler(midiSource, packetList);
-                            }
-                        }, {
-                            protocols: [PGMidiSourceDelegate],
-                            exposedMethods: [{
-                                midiSourceMidiReceived: {
-                                    returns: interop.types.void,
-                                    params: [PGMidiSource, new interop.types.ReferenceType(MIDIPacketList)]
-                                }
-                            }]
-                        });
-
-                        // Save a reference to the delegate so that it doesn't get garbage collected.
-                        _this2._midiMessageDelegate = new MidiMessageDelegate();
-
-                        _this2._source.addDelegate(_this2._midiMessageDelegate);
-                        _this2.logger.info('MIDI message delegate added successfully.');
-                    })();
+                    // Save a reference to the delegate so that it doesn't get garbage collected.
+                    _this2._midiMessageDelegate = _MidiMessageDelegate2.default.alloc().initWithOptions(_this2.logger, messageHandler);
+                    _this2._source.addDelegate(_this2._midiMessageDelegate);
+                    _this2.logger.info('MIDI message delegate added successfully.');
                 }
             });
         }

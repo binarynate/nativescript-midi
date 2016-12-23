@@ -1,4 +1,3 @@
-/* globals PGMidiSourceDelegate, NSObject, interop, PGMidiSource, MIDIPacketList, SDMidiUtils */
 import ParameterValidator from 'parameter-validator';
 import MidiDevice from './MidiDevice';
 import { MidiError } from './errors';
