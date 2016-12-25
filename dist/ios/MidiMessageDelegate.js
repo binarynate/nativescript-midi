@@ -52,7 +52,7 @@ var MidiMessageDelegate = NSObject.extend({
 
         var formattedMessages = nsDataMessages.map(function (nsDataMessage) {
 
-            var formattedMessage = Uint8Array(nsDataMessage.length);
+            var formattedMessage = new Uint8Array(nsDataMessage.length);
 
             for (var byteIndex = 0; byteIndex < nsDataMessage.length; byteIndex++) {
 

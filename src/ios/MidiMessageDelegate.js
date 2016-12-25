@@ -47,7 +47,7 @@ const MidiMessageDelegate = NSObject.extend({
 
         let formattedMessages = nsDataMessages.map(nsDataMessage => {
 
-            let formattedMessage = Uint8Array(nsDataMessage.length);
+            let formattedMessage = new Uint8Array(nsDataMessage.length);
 
             for (let byteIndex = 0; byteIndex < nsDataMessage.length; byteIndex++) {
 
