@@ -1,4 +1,4 @@
-/* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiUtils */
+/* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 import { validate } from 'parameter-validator';
 
 const MidiMessageDelegate = NSObject.extend({
@@ -7,6 +7,7 @@ const MidiMessageDelegate = NSObject.extend({
 
         let self = this.super.init();
         validate({ logger, messageHandler }, [ 'logger', 'messageHandler' ], this);
+        this._midiParser = SDMidiParser.alloc().init();
         return self;
     },
 
@@ -23,7 +24,7 @@ const MidiMessageDelegate = NSObject.extend({
     */
     _convertPacketListToByteArray(packetList) {
 
-        let midiPacketsNsArray = SDMidiUtils.convertPacketListToData(packetList),
+        let midiPacketsNsArray = this._midiParser.parsePacketList(packetList),
             packets = convertNsArrayToArray(midiPacketsNsArray);
 
         let totalBytes = packets.reduce((total, packet) => total + packet.length, 0);

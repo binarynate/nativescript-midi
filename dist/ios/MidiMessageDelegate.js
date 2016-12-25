@@ -11,6 +11,7 @@ var MidiMessageDelegate = NSObject.extend({
 
         var self = this.super.init();
         (0, _parameterValidator.validate)({ logger: logger, messageHandler: messageHandler }, ['logger', 'messageHandler'], this);
+        this._midiParser = SDMidiParser.alloc().init();
         return self;
     },
     midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
@@ -27,7 +28,7 @@ var MidiMessageDelegate = NSObject.extend({
     */
     _convertPacketListToByteArray: function _convertPacketListToByteArray(packetList) {
 
-        var midiPacketsNsArray = SDMidiUtils.convertPacketListToData(packetList),
+        var midiPacketsNsArray = this._midiParser.parsePacketList(packetList),
             packets = convertNsArrayToArray(midiPacketsNsArray);
 
         var totalBytes = packets.reduce(function (total, packet) {
@@ -82,7 +83,7 @@ var MidiMessageDelegate = NSObject.extend({
             params: [PGMidiSource, new interop.types.ReferenceType(MIDIPacketList)]
         }
     }]
-}); /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiUtils */
+}); /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 exports.default = MidiMessageDelegate;
 
 
