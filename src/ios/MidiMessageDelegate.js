@@ -56,6 +56,8 @@ const MidiMessageDelegate = NSObject.extend({
 
                 formattedMessage[byteIndex] = byteReference.value;
             }
+
+            return formattedMessage;
         });
 
         return formattedMessages;
