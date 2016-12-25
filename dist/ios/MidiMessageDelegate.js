@@ -7,6 +7,18 @@ Object.defineProperty(exports, "__esModule", {
 var _parameterValidator = require('parameter-validator');
 
 var MidiMessageDelegate = NSObject.extend({
+
+    /**
+    * Handles an array of MIDI messages that were received.
+    *
+    * @interface messageHandler
+    * @param {Array.<Uint8Array>} messages
+    */
+
+    /**
+    * @param {Logger}         logger
+    * @param {messageHandler} messageHandler
+    */
     initWithOptions: function initWithOptions(logger, messageHandler) {
 
         var self = this.super.init();
@@ -17,60 +29,41 @@ var MidiMessageDelegate = NSObject.extend({
     midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
 
         this._log('MIDI packetlist received.');
-        var bytes = this._convertPacketListToByteArray(packetList);
-        this.messageHandler(bytes);
+        var messages = this._parseMessagesFromPacketList(packetList);
+        if (messages.length) {
+            this.messageHandler(messages);
+        }
     },
 
 
     /**
-    * @param   {MIDIPacketList} packetList
-    * @returns {Uint8Array}     bytes
+    * A MIDIPacketList can contain multiple messages or, in the case of a long SysEx message, it may contain
+    * only a fragment of a message. This method collates packetLists to parse the received bytes into discreet,
+    * validated MIDI messages and formats the messages into a simple, platform-agnostic binary format.
+    *
+    * @param   {CoreMidi/MIDIPacketList} packetList
+    * @returns {Array.<Uint8Array>}      Array where each item is a Uint8Array containing the sanitized bytes
+    *                                    for a single MIDI message.
     */
-    _convertPacketListToByteArray: function _convertPacketListToByteArray(packetList) {
+    _parseMessagesFromPacketList: function _parseMessagesFromPacketList(packetList) {
 
-        var midiPacketsNsArray = this._midiParser.parsePacketList(packetList),
-            packets = convertNsArrayToArray(midiPacketsNsArray);
+        var messagesNsArray = this._midiParser.parsePacketList(packetList),
+            nsDataMessages = convertNsArrayToArray(messagesNsArray);
 
-        var totalBytes = packets.reduce(function (total, packet) {
-            return total + packet.length;
-        }, 0);
+        var formattedMessages = nsDataMessages.map(function (nsDataMessage) {
 
-        var aggregatedBytes = new Uint8Array(totalBytes),
-            aggregatedBytesIndex = 0;
+            var formattedMessage = Uint8Array(nsDataMessage.length);
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+            for (var byteIndex = 0; byteIndex < nsDataMessage.length; byteIndex++) {
 
-        try {
-            for (var _iterator = packets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var packet = _step.value;
+                var bytePointer = nsDataMessage.bytes.add(byteIndex),
+                    byteReference = new interop.Reference(interop.types.uint8, bytePointer);
 
-
-                for (var packetByteIndex = 0; packetByteIndex < packet.length; packetByteIndex++) {
-
-                    var bytePointer = packet.bytes.add(packetByteIndex),
-                        byteReference = new interop.Reference(interop.types.uint8, bytePointer);
-
-                    aggregatedBytes[aggregatedBytesIndex++] = byteReference.value;
-                }
+                formattedMessage[byteIndex] = byteReference.value;
             }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
+        });
 
-        return aggregatedBytes;
+        return formattedMessages;
     },
     _log: function _log(message, metadata) {
         this.logger.info('MidiMessageDelegate: ' + message, metadata);

@@ -3,6 +3,17 @@ import { validate } from 'parameter-validator';
 
 const MidiMessageDelegate = NSObject.extend({
 
+    /**
+    * Handles an array of MIDI messages that were received.
+    *
+    * @interface messageHandler
+    * @param {Array.<Uint8Array>} messages
+    */
+
+    /**
+    * @param {Logger}         logger
+    * @param {messageHandler} messageHandler
+    */
     initWithOptions(logger, messageHandler) {
 
         let self = this.super.init();
@@ -14,35 +25,40 @@ const MidiMessageDelegate = NSObject.extend({
     midiSourceMidiReceived(midiSource, packetList) {
 
         this._log('MIDI packetlist received.');
-        let bytes = this._convertPacketListToByteArray(packetList);
-        this.messageHandler(bytes);
+        let messages = this._parseMessagesFromPacketList(packetList);
+        if (messages.length) {
+            this.messageHandler(messages);
+        }
     },
 
     /**
-    * @param   {MIDIPacketList} packetList
-    * @returns {Uint8Array}     bytes
+    * A MIDIPacketList can contain multiple messages or, in the case of a long SysEx message, it may contain
+    * only a fragment of a message. This method collates packetLists to parse the received bytes into discreet,
+    * validated MIDI messages and formats the messages into a simple, platform-agnostic binary format.
+    *
+    * @param   {CoreMidi/MIDIPacketList} packetList
+    * @returns {Array.<Uint8Array>}      Array where each item is a Uint8Array containing the sanitized bytes
+    *                                    for a single MIDI message.
     */
-    _convertPacketListToByteArray(packetList) {
+    _parseMessagesFromPacketList(packetList) {
 
-        let midiPacketsNsArray = this._midiParser.parsePacketList(packetList),
-            packets = convertNsArrayToArray(midiPacketsNsArray);
+        let messagesNsArray = this._midiParser.parsePacketList(packetList),
+            nsDataMessages = convertNsArrayToArray(messagesNsArray);
 
-        let totalBytes = packets.reduce((total, packet) => total + packet.length, 0);
+        let formattedMessages = nsDataMessages.map(nsDataMessage => {
 
-        let aggregatedBytes = new Uint8Array(totalBytes),
-            aggregatedBytesIndex = 0;
+            let formattedMessage = Uint8Array(nsDataMessage.length);
 
-        for (let packet of packets) {
+            for (let byteIndex = 0; byteIndex < nsDataMessage.length; byteIndex++) {
 
-            for (let packetByteIndex = 0; packetByteIndex < packet.length; packetByteIndex++) {
-
-                let bytePointer = packet.bytes.add(packetByteIndex),
+                let bytePointer = nsDataMessage.bytes.add(byteIndex),
                     byteReference = new interop.Reference(interop.types.uint8, bytePointer);
 
-                aggregatedBytes[aggregatedBytesIndex++] = byteReference.value;
+                formattedMessage[byteIndex] = byteReference.value;
             }
-        }
-        return aggregatedBytes;
+        });
+
+        return formattedMessages;
     },
 
     _log(message, metadata) {
