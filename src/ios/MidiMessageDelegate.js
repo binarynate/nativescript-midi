@@ -1,5 +1,6 @@
 /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 import { validate } from 'parameter-validator';
+import { convertNSArrayToArray } from 'nativescript-utilities';
 
 const MidiMessageDelegate = NSObject.extend({
 
@@ -43,7 +44,7 @@ const MidiMessageDelegate = NSObject.extend({
     _parseMessagesFromPacketList(packetList) {
 
         let messagesNsArray = this._midiParser.parsePacketList(packetList),
-            nsDataMessages = convertNsArrayToArray(messagesNsArray);
+            nsDataMessages = convertNSArrayToArray(messagesNsArray);
 
         let formattedMessages = nsDataMessages.map(nsDataMessage => {
 
@@ -80,14 +81,3 @@ const MidiMessageDelegate = NSObject.extend({
 });
 
 export default MidiMessageDelegate;
-
-function convertNsArrayToArray(nsArray) {
-
-    let array = [];
-
-    for (let i = 0; i < nsArray.count; i++) {
-        array.push(nsArray.objectAtIndex(i));
-    }
-
-    return array;
-}

@@ -22,6 +22,7 @@
     "jshint": "^2.9.4"
   },
   "dependencies": {
+    "nativescript-utilities": "git+ssh://git@bitbucket.org/binarynate/nativescript-utilities.git",
     "parameter-validator": "git@github.com:MyPureCloud/parameter-validator.git"
   }
 }

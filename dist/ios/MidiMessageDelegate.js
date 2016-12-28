@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _parameterValidator = require('parameter-validator');
 
+var _nativescriptUtilities = require('nativescript-utilities');
+
+/* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 var MidiMessageDelegate = NSObject.extend({
 
     /**
@@ -48,7 +51,7 @@ var MidiMessageDelegate = NSObject.extend({
     _parseMessagesFromPacketList: function _parseMessagesFromPacketList(packetList) {
 
         var messagesNsArray = this._midiParser.parsePacketList(packetList),
-            nsDataMessages = convertNsArrayToArray(messagesNsArray);
+            nsDataMessages = (0, _nativescriptUtilities.convertNSArrayToArray)(messagesNsArray);
 
         var formattedMessages = nsDataMessages.map(function (nsDataMessage) {
 
@@ -78,17 +81,6 @@ var MidiMessageDelegate = NSObject.extend({
             params: [PGMidiSource, new interop.types.ReferenceType(MIDIPacketList)]
         }
     }]
-}); /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
+});
+
 exports.default = MidiMessageDelegate;
-
-
-function convertNsArrayToArray(nsArray) {
-
-    var array = [];
-
-    for (var i = 0; i < nsArray.count; i++) {
-        array.push(nsArray.objectAtIndex(i));
-    }
-
-    return array;
-}
