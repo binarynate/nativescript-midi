@@ -53,22 +53,11 @@ var MidiMessageDelegate = NSObject.extend({
         var messagesNsArray = this._midiParser.parsePacketList(packetList),
             nsDataMessages = (0, _nativescriptUtilities.convertNSArrayToArray)(messagesNsArray);
 
-        var formattedMessages = nsDataMessages.map(function (nsDataMessage) {
-
-            var formattedMessage = new Uint8Array(nsDataMessage.length);
-
-            for (var byteIndex = 0; byteIndex < nsDataMessage.length; byteIndex++) {
-
-                var bytePointer = nsDataMessage.bytes.add(byteIndex),
-                    byteReference = new interop.Reference(interop.types.uint8, bytePointer);
-
-                formattedMessage[byteIndex] = byteReference.value;
-            }
-
-            return formattedMessage;
+        return nsDataMessages.map(function (_ref) {
+            var bytes = _ref.bytes,
+                length = _ref.length;
+            return (0, _nativescriptUtilities.convertReferenceToUint8Array)(bytes, length);
         });
-
-        return formattedMessages;
     },
     _log: function _log(message, metadata) {
         this.logger.info('MidiMessageDelegate: ' + message, metadata);
