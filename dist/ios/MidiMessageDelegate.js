@@ -56,7 +56,7 @@ var MidiMessageDelegate = NSObject.extend({
         return nsDataMessages.map(function (_ref) {
             var bytes = _ref.bytes,
                 length = _ref.length;
-            return (0, _nativescriptUtilities.convertReferenceToUint8Array)(bytes, length);
+            return (0, _nativescriptUtilities.convertPointerToUint8Array)(bytes, length);
         });
     },
     _log: function _log(message, metadata) {

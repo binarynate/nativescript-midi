@@ -12,6 +12,7 @@
   "scripts": {
     "lint": "jshint src",
     "build": "npm run lint && rm -rf dist && babel src --out-dir dist",
+    "reinstall-utils": "rm -rf node_modules/nativescript-utilities && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nathan Hill",
