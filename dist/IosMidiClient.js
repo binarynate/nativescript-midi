@@ -11,7 +11,7 @@ var _IosMidiDevice = require('./IosMidiDevice');
 
 var _IosMidiDevice2 = _interopRequireDefault(_IosMidiDevice);
 
-var _MidiDeviceDelegate = require('ios/MidiDeviceDelegate');
+var _MidiDeviceDelegate = require('./ios/MidiDeviceDelegate');
 
 var _MidiDeviceDelegate2 = _interopRequireDefault(_MidiDeviceDelegate);
 
