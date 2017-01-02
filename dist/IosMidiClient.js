@@ -44,74 +44,19 @@ var MidiClient = function () {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
+        this._devices = this._discoverDevices();
     }
 
     /**
-    * Performs an initial search for available MIDI devices.
+    * The public property for accessing the available MIDI Devices.
     *
-    * @returns {Promise.<Array.<MidiDevice>>}
+    * @property {Array.<MidiDevice>}
     */
 
 
     _createClass(MidiClient, [{
-        key: 'discoverDevices',
-        value: function discoverDevices() {
-            var _this = this;
+        key: 'addDeviceAddedListener',
 
-            return Promise.resolve().then(function () {
-
-                if (_this._devices) {
-                    return _this._devices;
-                }
-
-                var midiDevices = Array.from(_this._midiClient.sources).map(function (source) {
-                    return { source: source, name: source.name };
-                });
-
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    var _loop = function _loop() {
-                        var destination = _step.value;
-
-
-                        var device = midiDevices.find(function (d) {
-                            return d.name === destination.name;
-                        });
-
-                        if (device) {
-                            device.destination = destination;
-                        } else {
-                            midiDevices.push({ destination: destination, name: destination.name });
-                        }
-                    };
-
-                    for (var _iterator = _this._midiClient.destinations[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        _loop();
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                _this._devices = midiDevices.map(function (deviceInfo) {
-                    return new _IosMidiDevice2.default(Object.assign(deviceInfo, { logger: _this.logger }));
-                });
-                return _this._devices;
-            });
-        }
 
         /**
         * A callback that responds to a device change event.
@@ -125,9 +70,6 @@ var MidiClient = function () {
         *
         * @param {deviceEventCallback} callback
         */
-
-    }, {
-        key: 'addDeviceAddedListener',
         value: function addDeviceAddedListener(callback) {
 
             this._validateEventListener(callback);
@@ -172,6 +114,64 @@ var MidiClient = function () {
             if (!this._deviceUpdatedListeners.includes(callback)) {
                 this._deviceUpdatedListeners.push(callback);
             }
+        }
+
+        /**
+        * Performs an initial search for available MIDI devices.
+        *
+        * @returns {Array.<MidiDevice>}
+        */
+
+    }, {
+        key: '_discoverDevices',
+        value: function _discoverDevices() {
+            var _this = this;
+
+            var midiDevices = Array.from(this._midiClient.sources).map(function (source) {
+                return { source: source, name: source.name };
+            });
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                var _loop = function _loop() {
+                    var destination = _step.value;
+
+
+                    var device = midiDevices.find(function (d) {
+                        return d.name === destination.name;
+                    });
+
+                    if (device) {
+                        device.destination = destination;
+                    } else {
+                        midiDevices.push({ destination: destination, name: destination.name });
+                    }
+                };
+
+                for (var _iterator = this._midiClient.destinations[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    _loop();
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return midiDevices.map(function (deviceInfo) {
+                return new _IosMidiDevice2.default(Object.assign(deviceInfo, { logger: _this.logger }));
+            });
         }
 
         /**
@@ -437,6 +437,11 @@ var MidiClient = function () {
             if (typeof callback !== 'function') {
                 throw new Error('The event listener must be a function.');
             }
+        }
+    }, {
+        key: 'devices',
+        get: function get() {
+            return this._devices;
         }
     }]);
 

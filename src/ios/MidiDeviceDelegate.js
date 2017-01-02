@@ -1,13 +1,9 @@
 /* globals NSObject, PGMidiDelegate */
 import { validate } from 'parameter-validator';
 
-export const DeviceEventType = {
-    SOURCE_ADDED: 0,
-    SOURCE_REMOVED: 1,
-    DESTINATION_ADDED: 2,
-    DESTINATION_REMOVED: 3
-};
-
+/**
+* @class Objective-C interop class for detecting when MIDI sources and destinations have been added or removed.
+*/
 const MidiDeviceDelegate = NSObject.extend({
 
     /**

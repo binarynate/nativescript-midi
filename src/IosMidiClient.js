@@ -26,37 +26,16 @@ export default class MidiClient {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
+        this._devices = this._discoverDevices();
     }
 
     /**
-    * Performs an initial search for available MIDI devices.
+    * The public property for accessing the available MIDI Devices.
     *
-    * @returns {Promise.<Array.<MidiDevice>>}
+    * @property {Array.<MidiDevice>}
     */
-    discoverDevices() {
-        return Promise.resolve()
-        .then(() => {
-
-            if (this._devices) {
-                return this._devices;
-            }
-
-            let midiDevices = Array.from(this._midiClient.sources).map(source => ({ source, name: source.name }));
-
-            for (let destination of this._midiClient.destinations) {
-
-                let device = midiDevices.find(d => d.name === destination.name);
-
-                if (device) {
-                    device.destination = destination;
-                } else {
-                    midiDevices.push({ destination, name: destination.name });
-                }
-            }
-
-            this._devices = midiDevices.map(deviceInfo => new IosMidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
-            return this._devices;
-        });
+    get devices() {
+        return this._devices;
     }
 
     /**
@@ -109,6 +88,29 @@ export default class MidiClient {
         if (!this._deviceUpdatedListeners.includes(callback)) {
             this._deviceUpdatedListeners.push(callback);
         }
+    }
+
+    /**
+    * Performs an initial search for available MIDI devices.
+    *
+    * @returns {Array.<MidiDevice>}
+    */
+    _discoverDevices() {
+
+        let midiDevices = Array.from(this._midiClient.sources).map(source => ({ source, name: source.name }));
+
+        for (let destination of this._midiClient.destinations) {
+
+            let device = midiDevices.find(d => d.name === destination.name);
+
+            if (device) {
+                device.destination = destination;
+            } else {
+                midiDevices.push({ destination, name: destination.name });
+            }
+        }
+
+        return midiDevices.map(deviceInfo => new IosMidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
     }
 
     /**

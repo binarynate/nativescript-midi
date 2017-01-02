@@ -3,18 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.DeviceEventType = undefined;
 
 var _parameterValidator = require('parameter-validator');
 
-var DeviceEventType = exports.DeviceEventType = {
-    SOURCE_ADDED: 0,
-    SOURCE_REMOVED: 1,
-    DESTINATION_ADDED: 2,
-    DESTINATION_REMOVED: 3
-}; /* globals NSObject, PGMidiDelegate */
-
-
+/**
+* @class Objective-C interop class for detecting when MIDI sources and destinations have been added or removed.
+*/
 var MidiDeviceDelegate = NSObject.extend({
 
     /**
@@ -97,6 +91,5 @@ var MidiDeviceDelegate = NSObject.extend({
     _log: function _log(message, metadata) {
         this.logger.info(this.constructor.name + ': ' + message, metadata);
     }
-}, { protocols: [PGMidiDelegate] });
-
+}, { protocols: [PGMidiDelegate] }); /* globals NSObject, PGMidiDelegate */
 exports.default = MidiDeviceDelegate;
