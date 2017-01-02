@@ -111,6 +111,62 @@ var IosMidiDevice = function (_MidiDevice) {
                 _this3._log('Finished sending MIDI message bytes.');
             });
         }
+
+        /*
+        * Methods not part of the MidiDevice interface.
+        */
+
+        /**
+        * Adds a PGMidiSource for the device.
+        *
+        * @param {PGMidi/PGMidiSource} source
+        */
+
+    }, {
+        key: 'addSource',
+        value: function addSource(source) {
+
+            this._log('Adding MIDI source.');
+            this._source = source;
+        }
+
+        /**
+        * Removes the device's PGMidiSource.
+        */
+
+    }, {
+        key: 'removeSource',
+        value: function removeSource() {
+
+            this._log('Removing MIDI source.');
+            delete this._source;
+        }
+
+        /**
+        * Adds a PGMidiDestination for the device.
+        *
+        * @param {PGMidi/PGMidiDestination} destination
+        */
+
+    }, {
+        key: 'addDestination',
+        value: function addDestination(destination) {
+
+            this._log('Adding MIDI destination.');
+            this._destination = destination;
+        }
+
+        /**
+        * Removes the device's PGMidiDestination.
+        */
+
+    }, {
+        key: 'removeDestination',
+        value: function removeDestination() {
+
+            this._log('Removing MIDI destination.');
+            delete this._destination;
+        }
     }, {
         key: '_log',
         value: function _log(message, metadata) {

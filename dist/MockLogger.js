@@ -8,6 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+* A mock for a Winston-style logger.
+*/
 var MockLogger = function () {
     function MockLogger() {
         _classCallCheck(this, MockLogger);
@@ -17,8 +20,8 @@ var MockLogger = function () {
         key: "info",
         value: function info() {}
     }, {
-        key: "warning",
-        value: function warning() {}
+        key: "warn",
+        value: function warn() {}
     }, {
         key: "error",
         value: function error() {}

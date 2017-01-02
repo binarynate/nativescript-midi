@@ -11,21 +11,42 @@ export const DeviceEventType = {
 const MidiDeviceDelegate = NSObject.extend({
 
     /**
-    * Handles a change in MIDI devices from the PGMidi module.
+    * Handles a change in a MIDI source from the PGMidi module.
     *
-    * @interface eventHandler
-    * @param {DeviceEventType}                eventType
-    * @param {PGMidiSource|PGMidiDestination} pgMidiDevice
+    * @interface midiSourceEventHandler
+    * @param {PGMidiSource} source
     */
 
     /**
-    * @param {Logger}       logger
-    * @param {eventHandler} eventHandler
+    * Handles a change in a MIDI destination from the PGMidi module.
+    *
+    * @interface midiDestinationEventHandler
+    * @param {PGMidiDestination} destination
     */
-    initWithOptions(logger, eventHandler) {
+
+    /**
+    * @param {Logger}                      logger
+    * @param {midiSourceEventHandler}      sourceAddedHandler
+    * @param {midiSourceEventHandler}      sourceRemovedHandler
+    * @param {midiDestinationEventHandler} destinationAddedHandler
+    * @param {midiDestinationEventHandler} destinationRemovedHandler
+    */
+    initWithOptions(logger, sourceAddedHandler, sourceRemovedHandler, destinationAddedHandler, destinationRemovedHandler) {
 
         let self = this.super.init();
-        validate({ logger, eventHandler }, [ 'logger', 'eventHandler' ], this);
+        validate({
+            logger,
+            sourceAddedHandler,
+            sourceRemovedHandler,
+            destinationAddedHandler,
+            destinationRemovedHandler
+         }, [
+            'logger',
+            'sourceAddedHandler',
+            'sourceRemovedHandler',
+            'destinationAddedHandler',
+            'destinationRemovedHandler'
+        ], this);
         return self;
     },
 
@@ -36,7 +57,7 @@ const MidiDeviceDelegate = NSObject.extend({
     midiSourceAdded(midi, source) {
 
         this._log('MIDI source added.');
-        this.eventHandler(DeviceEventType.SOURCE_ADDED, source);
+        this.sourceAddedHandler(source);
     },
 
     /**
@@ -46,7 +67,7 @@ const MidiDeviceDelegate = NSObject.extend({
     midiSourceRemoved(midi, source) {
 
         this._log('MIDI source removed.');
-        this.eventHandler(DeviceEventType.SOURCE_REMOVED, source);
+        this.sourceRemovedHandler(source);
     },
 
     /**
@@ -56,7 +77,7 @@ const MidiDeviceDelegate = NSObject.extend({
     midiDestinationAdded(midi, destination) {
 
         this._log('MIDI destination added.');
-        this.eventHandler(DeviceEventType.DESTINATION_ADDED, destination);
+        this.destinationAddedHandler(destination);
     },
 
     /**
@@ -66,7 +87,7 @@ const MidiDeviceDelegate = NSObject.extend({
     midiDestinationRemoved(midi, destination) {
 
         this._log('MIDI destination removed.');
-        this.eventHandler(DeviceEventType.DESTINATION_REMOVED, destination);
+        this.destinationRemovedHandler(destination);
     },
 
     _log(message, metadata) {

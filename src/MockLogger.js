@@ -1,7 +1,10 @@
 
+/**
+* A mock for a Winston-style logger.
+*/
 export default class MockLogger {
 
     info() {}
-    warning() {}
+    warn() {}
     error() {}
 }

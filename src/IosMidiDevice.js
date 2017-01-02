@@ -76,6 +76,50 @@ export default class IosMidiDevice extends MidiDevice {
         });
     }
 
+    /*
+    * Methods not part of the MidiDevice interface.
+    */
+
+    /**
+    * Adds a PGMidiSource for the device.
+    *
+    * @param {PGMidi/PGMidiSource} source
+    */
+    addSource(source) {
+
+        this._log('Adding MIDI source.');
+        this._source = source;
+    }
+
+    /**
+    * Removes the device's PGMidiSource.
+    */
+    removeSource() {
+
+        this._log('Removing MIDI source.');
+        delete this._source;
+    }
+
+    /**
+    * Adds a PGMidiDestination for the device.
+    *
+    * @param {PGMidi/PGMidiDestination} destination
+    */
+    addDestination(destination) {
+
+        this._log('Adding MIDI destination.');
+        this._destination = destination;
+    }
+
+    /**
+    * Removes the device's PGMidiDestination.
+    */
+    removeDestination() {
+
+        this._log('Removing MIDI destination.');
+        delete this._destination;
+    }
+
     _log(message, metadata) {
         this.logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
