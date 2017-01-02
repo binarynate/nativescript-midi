@@ -18,9 +18,11 @@ export default class MidiClient {
     }
 
     /**
+    * Performs an initial search for available MIDI devices.
+    *
     * @returns {Array.<MidiDevice>}
     */
-    getAvailableDevices() {
+    discoverDevices() {
 
         return Promise.resolve()
         .then(() => {

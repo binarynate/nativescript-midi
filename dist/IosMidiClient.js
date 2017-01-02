@@ -39,13 +39,15 @@ var MidiClient = function () {
     }
 
     /**
+    * Performs an initial search for available MIDI devices.
+    *
     * @returns {Array.<MidiDevice>}
     */
 
 
     _createClass(MidiClient, [{
-        key: 'getAvailableDevices',
-        value: function getAvailableDevices() {
+        key: 'discoverDevices',
+        value: function discoverDevices() {
             var _this = this;
 
             return Promise.resolve().then(function () {
