@@ -1,9 +1,9 @@
 /*globals PGMidi */
 import IosMidiDevice from './IosMidiDevice';
-import MidiDeviceDelegate from './ios/MidiDeviceDelegate';
-import MockLogger from './MockLogger';
+import MidiDeviceDelegate from './MidiDeviceDelegate';
+import MockLogger from '../MockLogger';
 
-export default class MidiClient {
+export default class IosMidiDeviceManager {
 
     /**
     * @param {Object} [options]

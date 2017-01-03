@@ -11,11 +11,11 @@ var _IosMidiDevice = require('./IosMidiDevice');
 
 var _IosMidiDevice2 = _interopRequireDefault(_IosMidiDevice);
 
-var _MidiDeviceDelegate = require('./ios/MidiDeviceDelegate');
+var _MidiDeviceDelegate = require('./MidiDeviceDelegate');
 
 var _MidiDeviceDelegate2 = _interopRequireDefault(_MidiDeviceDelegate);
 
-var _MockLogger = require('./MockLogger');
+var _MockLogger = require('../MockLogger');
 
 var _MockLogger2 = _interopRequireDefault(_MockLogger);
 
@@ -23,17 +23,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MidiClient = function () {
+var IosMidiDeviceManager = function () {
 
     /**
     * @param {Object} [options]
     * @param {Object} [options.logger] - optional logger that implements the Winston logging
     *                                    interface.
     */
-    function MidiClient() {
+    function IosMidiDeviceManager() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-        _classCallCheck(this, MidiClient);
+        _classCallCheck(this, IosMidiDeviceManager);
 
         this.logger = options.logger || new _MockLogger2.default();
         this._midiClient = new PGMidi();
@@ -59,7 +59,7 @@ var MidiClient = function () {
     */
 
 
-    _createClass(MidiClient, [{
+    _createClass(IosMidiDeviceManager, [{
         key: 'addDeviceAddedListener',
 
 
@@ -450,7 +450,7 @@ var MidiClient = function () {
         }
     }]);
 
-    return MidiClient;
+    return IosMidiDeviceManager;
 }();
 
-exports.default = MidiClient;
+exports.default = IosMidiDeviceManager;

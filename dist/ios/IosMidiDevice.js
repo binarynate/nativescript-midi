@@ -10,17 +10,17 @@ var _parameterValidator = require('parameter-validator');
 
 var _parameterValidator2 = _interopRequireDefault(_parameterValidator);
 
-var _MidiDevice2 = require('./MidiDevice');
+var _MidiDevice2 = require('../MidiDevice');
 
 var _MidiDevice3 = _interopRequireDefault(_MidiDevice2);
 
-var _errors = require('./errors');
+var _errors = require('../errors');
 
-var _MockLogger = require('./MockLogger');
+var _MockLogger = require('../MockLogger');
 
 var _MockLogger2 = _interopRequireDefault(_MockLogger);
 
-var _MidiMessageDelegate = require('./ios/MidiMessageDelegate');
+var _MidiMessageDelegate = require('./MidiMessageDelegate');
 
 var _MidiMessageDelegate2 = _interopRequireDefault(_MidiMessageDelegate);
 

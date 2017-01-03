@@ -1,8 +1,8 @@
 import ParameterValidator from 'parameter-validator';
-import MidiDevice from './MidiDevice';
-import { MidiError } from './errors';
-import MockLogger from './MockLogger';
-import MidiMessageDelegate from './ios/MidiMessageDelegate';
+import MidiDevice from '../MidiDevice';
+import { MidiError } from '../errors';
+import MockLogger from '../MockLogger';
+import MidiMessageDelegate from './MidiMessageDelegate';
 
 export default class IosMidiDevice extends MidiDevice {
 
