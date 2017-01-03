@@ -1,4 +1,4 @@
-/* globals NSObject, PGMidiDelegate */
+/* globals NSObject, PGMidiDelegate, interop, PGMidi, PGMidiSource, PGMidiDestination */
 import { validate } from 'parameter-validator';
 
 /**
@@ -90,6 +90,27 @@ const MidiDeviceDelegate = NSObject.extend({
         this.logger.info(`${this.constructor.name}: ${message}`, metadata);
     }
 
-}, { protocols: [ PGMidiDelegate ]});
-
+}, {
+    protocols: [ PGMidiDelegate ],
+    exposedMethods: [
+        {
+            midiSourceAdded: {
+                returns: interop.types.void,
+                params: [ PGMidi, PGMidiSource ]
+            },
+            midiSourceRemoved: {
+                returns: interop.types.void,
+                params: [ PGMidi, PGMidiSource ]
+            },
+            midiDestinationAdded: {
+                returns: interop.types.void,
+                params: [ PGMidi, PGMidiDestination ]
+            },
+            midiDestinationRemoved: {
+                returns: interop.types.void,
+                params: [ PGMidi, PGMidiDestination ]
+            }
+        }
+    ]
+});
 export default MidiDeviceDelegate;

@@ -91,5 +91,25 @@ var MidiDeviceDelegate = NSObject.extend({
     _log: function _log(message, metadata) {
         this.logger.info(this.constructor.name + ': ' + message, metadata);
     }
-}, { protocols: [PGMidiDelegate] }); /* globals NSObject, PGMidiDelegate */
+}, {
+    protocols: [PGMidiDelegate],
+    exposedMethods: [{
+        midiSourceAdded: {
+            returns: interop.types.void,
+            params: [PGMidi, PGMidiSource]
+        },
+        midiSourceRemoved: {
+            returns: interop.types.void,
+            params: [PGMidi, PGMidiSource]
+        },
+        midiDestinationAdded: {
+            returns: interop.types.void,
+            params: [PGMidi, PGMidiDestination]
+        },
+        midiDestinationRemoved: {
+            returns: interop.types.void,
+            params: [PGMidi, PGMidiDestination]
+        }
+    }]
+}); /* globals NSObject, PGMidiDelegate, interop, PGMidi, PGMidiSource, PGMidiDestination */
 exports.default = MidiDeviceDelegate;
