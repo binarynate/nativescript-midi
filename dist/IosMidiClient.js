@@ -40,7 +40,12 @@ var MidiClient = function () {
         this._midiClient.networkEnabled = true;
         this._midiClient.virtualDestinationEnabled = true;
         this._midiClient.virtualSourceEnabled = true;
-        this._midiClient.delegate = _MidiDeviceDelegate2.default.alloc().initWithOptions(this.logger, this._handleSourceAddedEvent.bind(this), this._handleSourceRemovedEvent.bind(this), this._handleDestinationAddedEvent.bind(this), this._handleDestinationRemovedEvent.bind(this));
+
+        // It's necessary to reference this delegate directly from this JS class so that it doesn't get
+        // garbage collected.
+        this._midiDeviceDelegate = _MidiDeviceDelegate2.default.alloc().initWithOptions(this.logger, this._handleSourceAddedEvent.bind(this), this._handleSourceRemovedEvent.bind(this), this._handleDestinationAddedEvent.bind(this), this._handleDestinationRemovedEvent.bind(this));
+
+        this._midiClient.delegate = this._midiDeviceDelegate;
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
