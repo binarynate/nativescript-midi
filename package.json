@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "nativescript-utilities": "git+ssh://git@bitbucket.org/binarynate/nativescript-utilities.git",
-    "parameter-validator": "git@github.com:MyPureCloud/parameter-validator.git"
+    "parameter-validator": "^1.0.0"
   }
 }
