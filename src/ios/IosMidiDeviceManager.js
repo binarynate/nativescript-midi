@@ -119,6 +119,21 @@ export default class IosMidiDeviceManager {
     }
 
     /**
+    * @param   {PGMidi/PGMidiConnection} connection
+    * @returns {CoreMidi/MIDIDeviceRef}
+    */
+    _getCoreMidiDeviceForPGConnection(connection) {
+
+        let entityReference = new interop.Reference();
+        MIDIEndointGetEntity(connection.endpoint, entityReference);
+
+        let deviceReference = new interop.Reference();
+        MIDIEntityGetDevice(entityReference.value, deviceReference);
+
+        return deviceReference.value;
+    }
+
+    /**
     * @param {PGMidi/PGMidiSource} source
     */
     _handleSourceAddedEvent(source) {
