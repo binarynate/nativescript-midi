@@ -1,5 +1,7 @@
 /*globals PGMidi */
 import IosMidiDevice from './IosMidiDevice';
+import IosMidiOutputPort from './IosMidiOutputPort';
+import IosMidiInputPort from './IosMidiInputPort';
 import MidiDeviceDelegate from './MidiDeviceDelegate';
 import MockLogger from '../MockLogger';
 
@@ -31,15 +33,7 @@ export default class IosMidiDeviceManager {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
-    }
-
-    /**
-    * The public property for accessing the available MIDI Devices.
-    *
-    * @property {Array.<MidiDevice>}
-    */
-    get devices() {
-        return this._devices;
+        this._devices = [];
     }
 
     /**
@@ -95,12 +89,11 @@ export default class IosMidiDeviceManager {
     }
 
     /**
-    * Performs an initial search for available MIDI devices. This method must be called before
-    * accessing `devices`.
+    * Gets the available MIDI devices.
     *
     * @returns {Promise.<Array.<IosMidiDevice>>}
     */
-    discoverDevices() {
+    getDevices() {
 
         return Promise.resolve()
         .then(() => {

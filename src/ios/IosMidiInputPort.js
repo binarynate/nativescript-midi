@@ -1,4 +1,5 @@
-import { validate } from 'parameter-validator';
+import { validate, validateAsync } from 'parameter-validator';
+import { MidiError } from '../errors';
 
 export default class IosMidiInputPort  {
 
@@ -10,10 +11,29 @@ export default class IosMidiInputPort  {
     constructor(options) {
 
         let { destination, logger } = validate(options, [ 'destination', 'logger' ]);
-        super({ connection: destination });
+        super({ connection: destination, logger });
 
         this._destination = destination;
-        this._logger = logger;
     }
+
+    /**
+    * Sends the given MIDI bytes to the input port.
+    *
+    * @param {Object}            options
+    * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
+    * @param {number}            options.length - Number of bytes
+    */
+    send(options) {
+
+        return validateAsync(options, [ 'bytes', 'length' ])
+        .then(({ bytes, length }) => {
+
+
+            this._log(`Sending MIDI message bytes...`);
+            this._destination.sendBytesSize(bytes, length);
+            this._log(`Finished sending MIDI message bytes.`);
+        });
+    }
+
 
 }

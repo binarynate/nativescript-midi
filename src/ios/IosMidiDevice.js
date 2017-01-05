@@ -27,6 +27,7 @@ export default class IosMidiDevice extends MidiDevice {
         this.logger = options.logger || new MockLogger();
         this.ios = { deviceRef };
         this._ports = ports;
+        this._globalMessageListeners; // Message listeners that are invoked when any port receives a message.
     }
 
     /**
@@ -44,30 +45,35 @@ export default class IosMidiDevice extends MidiDevice {
     }
 
     /**
-    * Connects to the MIDI device in order to be able to receive messages from it.
-    *
-    * @param   {Object}   options
-    * @param   {Function} options.messageHandler - Function that handles an incoming MIDI message
-    * @returns {Promise}
+    * @callback midiMessageListener
+    * @param {Array.<Uint8Array>} messages   - Array where each item is a Uint8Array containing a MIDI message.
+    * @param {IosMidiOutputPort}  outputPort - Output port from which the bytes were received.
     */
-    connect(options) {
 
-        return validateAsync(options, [ 'messageHandler' ])
-        .then(({ messageHandler }) => {
+    /**
+    * Adds a listener that is invoked when any of the device's output ports sends a message.
+    *
+    * @param {midiMessageListener} messageListener
+    */
+    addMessageListener(messageListener) {
 
-            if (this._source) {
+        if (typeof messageListener !== 'function') {
+            throw new Error('messageListener must be a function');
+        }
 
-                this.logger.info(`Adding MIDI message delegate for device '${this.name}'...`);
+        if (this._globalMessageListeners.includes(messageListener)) {
+            this._warn('Not device global MIDI message listener that has already been added.');
+            return;
+        }
 
-                // Save a reference to the delegate so that it doesn't get garbage collected.
-                this._midiMessageDelegate = MidiMessageDelegate.alloc().initWithOptions(this.logger, messageHandler);
-                this._source.addDelegate(this._midiMessageDelegate);
-                this.logger.info('MIDI message delegate added successfully.');
-            }
-        });
+        this._log('Adding device global MIDI message listener');
+        this._globalMessageListeners.push(messageListener);
+        this.outputPorts.forEach(port => port.addMessageListener(messageListener));
     }
 
     /**
+    * Sends the given MIDI bytes to all of the device's input ports.
+    *
     * @param {Object}            options
     * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
     * @param {number}            options.length - Number of bytes
@@ -75,15 +81,8 @@ export default class IosMidiDevice extends MidiDevice {
     send(options) {
 
         return validateAsync(options, [ 'bytes', 'length' ])
-        .then(({ bytes, length }) => {
-
-            if (!this._destination) {
-                throw new MidiError(`Can't send a message to the MIDI device '${this.name}', because it's not a destination.`);
-            }
-
-            this._log(`Sending MIDI message bytes...`);
-            this._destination.sendBytesSize(bytes, length);
-            this._log(`Finished sending MIDI message bytes.`);
+        .then(() => {
+            return Promise.all(this.inputPorts.map(port => port.send(options)));
         });
     }
 
@@ -109,6 +108,11 @@ export default class IosMidiDevice extends MidiDevice {
         }
         this._log('Adding MIDI port.', { port });
         this._ports.push(port);
+
+        if (port instanceof IosMidiOutputPort) {
+            // Attach all of the devices's global message handlers that have been registered.
+            this._globalMessageListeners.forEach(listener => port.addMessageListener(listener));
+        }
     }
 
     /**

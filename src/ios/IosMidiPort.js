@@ -14,10 +14,12 @@ export default class IosMidiPort {
     /**
     * @param {Object}                  options
     * @param {PGMidi/PGMidiConnection} options.connection
+    * @param {Object}                  options.logger
     */
     constructor(options) {
 
-        let { connection } = validate(options, [ 'connection' ]);
+        let { connection } = validate(options, [ 'connection', 'logger' ]);
+        this.logger = options.logger;
         this.ios = {};
         this.ios.endpointRef = connection.endpoint;
         this.ios.deviceRef = this._getDeviceRefForEndpointRef(connection.endpoint);
@@ -51,5 +53,19 @@ export default class IosMidiPort {
         MIDIEntityGetDevice(entityReference.value, deviceReference);
 
         return deviceReference.value;
+    }
+
+    /**
+    * @internal
+    */
+    _log(message, metadata) {
+        this.logger.info(`${this.constructor.name}::${this.ios.endpointName}::${this.ios.endpointRef}: ${message}`, metadata);
+    }
+
+    /**
+    * @internal
+    */
+    _warn(message, metadata) {
+        this.logger.warn(`${this.constructor.name}::${this.ios.endpointName}::${this.ios.endpointRef}: ${message}`, metadata);
     }
 }
