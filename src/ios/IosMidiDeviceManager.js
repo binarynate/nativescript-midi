@@ -33,7 +33,6 @@ export default class IosMidiDeviceManager {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
-        this._devices = [];
     }
 
     /**
@@ -99,7 +98,7 @@ export default class IosMidiDeviceManager {
         .then(() => {
 
             if (this._devices) {
-                return this._devices
+                return this._devices;
             }
 
             return IosMidiDevice.parseDevices({

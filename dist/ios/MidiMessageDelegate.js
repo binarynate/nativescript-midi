@@ -14,13 +14,13 @@ var MidiMessageDelegate = NSObject.extend({
     /**
     * Handles an array of MIDI messages that were received.
     *
-    * @interface messageHandler
-    * @param {Array.<Uint8Array>} messages
+    * @interface midiMessageDelegateHandler
+    * @param {Array.<Uint8Array>} messages - Array where each item is a Uint8Array containing a MIDI message.
     */
 
     /**
-    * @param {Logger}         logger
-    * @param {messageHandler} messageHandler
+    * @param {Logger}                     logger
+    * @param {midiMessageDelegateHandler} messageHandler
     */
     initWithOptions: function initWithOptions(logger, messageHandler) {
 

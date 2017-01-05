@@ -1,7 +1,6 @@
 /* globals interop, MIDIEndointGetEntity, MIDIEntityGetDevice */
 
 import { validate } from 'parameter-validator';
-import { getDeviceRefForEndpointRef } from './ios-utils';
 
 /**
 * @property {Object}                   ios             - Object exposing iOS-specific properties

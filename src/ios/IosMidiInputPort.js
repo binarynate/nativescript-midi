@@ -1,7 +1,7 @@
 import { validate, validateAsync } from 'parameter-validator';
-import { MidiError } from '../errors';
+import IosMidiPort from './IosMidiPort';
 
-export default class IosMidiInputPort  {
+export default class IosMidiInputPort extends IosMidiPort  {
 
     /**
     * @param {Object}                   options
@@ -28,12 +28,9 @@ export default class IosMidiInputPort  {
         return validateAsync(options, [ 'bytes', 'length' ])
         .then(({ bytes, length }) => {
 
-
             this._log(`Sending MIDI message bytes...`);
             this._destination.sendBytesSize(bytes, length);
             this._log(`Finished sending MIDI message bytes.`);
         });
     }
-
-
 }

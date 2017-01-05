@@ -1,7 +1,8 @@
 import { validate } from 'parameter-validator';
 import MidiMessageDelegate from './MidiMessageDelegate';
+import IosMidiPort from './IosMidiPort';
 
-export default class IosMidiOutputPort {
+export default class IosMidiOutputPort extends IosMidiPort {
 
     /**
     * @param {Object}              options
@@ -41,10 +42,9 @@ export default class IosMidiOutputPort {
 
         // Save a reference to the delegate so that it doesn't get garbage collected.
         let delegate = MidiMessageDelegate.alloc().initWithOptions(this.logger, midiDelegateHandler);
-        this._midiMessageDelegates.push(delegate)
+        this._midiMessageDelegates.push(delegate);
 
         this._source.addDelegate(delegate);
         this._log('MIDI message delegate added successfully.');
-        }
     }
 }

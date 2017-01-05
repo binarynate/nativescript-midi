@@ -11,6 +11,14 @@ var _IosMidiDevice = require('./IosMidiDevice');
 
 var _IosMidiDevice2 = _interopRequireDefault(_IosMidiDevice);
 
+var _IosMidiOutputPort = require('./IosMidiOutputPort');
+
+var _IosMidiOutputPort2 = _interopRequireDefault(_IosMidiOutputPort);
+
+var _IosMidiInputPort = require('./IosMidiInputPort');
+
+var _IosMidiInputPort2 = _interopRequireDefault(_IosMidiInputPort);
+
 var _MidiDeviceDelegate = require('./MidiDeviceDelegate');
 
 var _MidiDeviceDelegate2 = _interopRequireDefault(_MidiDeviceDelegate);
@@ -49,32 +57,24 @@ var IosMidiDeviceManager = function () {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
-        this._devices = this._discoverDevices();
     }
 
     /**
-    * The public property for accessing the available MIDI Devices.
+    * A callback that responds to a device change event.
     *
-    * @property {Array.<MidiDevice>}
+    * @callback deviceEventCallback
+    * @param {MidiDevice}
+    */
+
+    /**
+    * Registers a callback that is invoked when a device is added.
+    *
+    * @param {deviceEventCallback} callback
     */
 
 
     _createClass(IosMidiDeviceManager, [{
         key: 'addDeviceAddedListener',
-
-
-        /**
-        * A callback that responds to a device change event.
-        *
-        * @callback deviceEventCallback
-        * @param {MidiDevice}
-        */
-
-        /**
-        * Registers a callback that is invoked when a device is added.
-        *
-        * @param {deviceEventCallback} callback
-        */
         value: function addDeviceAddedListener(callback) {
 
             this._validateEventListener(callback);
@@ -122,42 +122,150 @@ var IosMidiDeviceManager = function () {
         }
 
         /**
-        * Performs an initial search for available MIDI devices.
+        * Gets the available MIDI devices.
         *
-        * @returns {Array.<MidiDevice>}
+        * @returns {Promise.<Array.<IosMidiDevice>>}
         */
 
     }, {
-        key: '_discoverDevices',
-        value: function _discoverDevices() {
+        key: 'getDevices',
+        value: function getDevices() {
             var _this = this;
 
-            var midiDevices = Array.from(this._midiClient.sources).map(function (source) {
-                return { source: source, name: source.name };
+            return Promise.resolve().then(function () {
+
+                if (_this._devices) {
+                    return _this._devices;
+                }
+
+                return _IosMidiDevice2.default.parseDevices({
+                    logger: _this.logger,
+                    midiClient: _this._midiClient
+                }).then(function (devices) {
+                    _this._devices = devices;
+                    return devices;
+                });
+            });
+        }
+
+        /**
+        * Adds the given device to the device list and notifies listeners of the addition.
+        */
+
+    }, {
+        key: '_addDevice',
+        value: function _addDevice(device) {
+
+            this._devices.push(device);
+            this._notifyDeviceAdded(device);
+        }
+
+        /**
+        * @param {IosMidiPort} port
+        */
+
+    }, {
+        key: '_addPort',
+        value: function _addPort(port) {
+
+            var deviceRef = port.ios.deviceRef;
+            var existingDevice = this._devices.find(function (device) {
+                return device.ios.deviceRef === deviceRef;
             });
 
+            if (existingDevice) {
+
+                existingDevice.addPort(port);
+                return this._notifyDeviceUpdated(existingDevice);
+            }
+
+            var newDevice = new _IosMidiDevice2.default({
+                logger: this.logger,
+                name: name,
+                ports: [port],
+                deviceRef: deviceRef
+            });
+
+            this._addDevice(newDevice);
+        }
+
+        /**
+        * @param {PGMidi/PGMidiSource} source
+        */
+
+    }, {
+        key: '_handleSourceAddedEvent',
+        value: function _handleSourceAddedEvent(source) {
+
+            this._log('Handling the "source added" event for the MIDI source \'' + source.name + '\'.');
+
+            var port = new _IosMidiOutputPort2.default({ logger: this.logger, source: source });
+            this._addPort(port);
+        }
+
+        /**
+        * @param {PGMidi/PGMidiSource} source
+        */
+
+    }, {
+        key: '_handleSourceRemovedEvent',
+        value: function _handleSourceRemovedEvent(source) {
+
+            this._log('Handling the "source removed" event for the MIDI source \'' + source.name + '\'.');
+
+            var port = new _IosMidiOutputPort2.default({ logger: this.logger, source: source });
+            this._removePort(port);
+        }
+
+        /**
+        * @param {PGMidi/PGMidiDestination} destination
+        */
+
+    }, {
+        key: '_handleDestinationAddedEvent',
+        value: function _handleDestinationAddedEvent(destination) {
+
+            this._log('Handling the "destination added" event for the MIDI destination \'' + destination.name + '\'.');
+
+            var port = new _IosMidiInputPort2.default({ logger: this.logger, destination: destination });
+            this._addPort(port);
+        }
+
+        /**
+        * @param {PGMidi/PGMidiDestination} destination
+        */
+
+    }, {
+        key: '_handleDestinationRemovedEvent',
+        value: function _handleDestinationRemovedEvent(destination) {
+
+            this._log('Handling the "destination removed" event for the MIDI destination \'' + destination.name + '\'.');
+
+            var port = new _IosMidiInputPort2.default({ logger: this.logger, destination: destination });
+            this._removePort(port);
+        }
+    }, {
+        key: '_log',
+        value: function _log(message, metadata) {
+            this.logger.info(this.constructor.name + ': ' + message, metadata);
+        }
+    }, {
+        key: '_notifyDeviceAdded',
+        value: function _notifyDeviceAdded(device) {
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
             var _iteratorError = undefined;
 
             try {
-                var _loop = function _loop() {
-                    var destination = _step.value;
 
+                for (var _iterator = this._deviceAddedListeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var callback = _step.value;
 
-                    var device = midiDevices.find(function (d) {
-                        return d.name === destination.name;
-                    });
-
-                    if (device) {
-                        device.destination = destination;
-                    } else {
-                        midiDevices.push({ destination: destination, name: destination.name });
+                    try {
+                        callback(device);
+                    } catch (error) {
+                        this.logger.error('A "device added" listener threw an error.', { error: error });
                     }
-                };
-
-                for (var _iterator = this._midiClient.destinations[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    _loop();
                 }
             } catch (err) {
                 _didIteratorError = true;
@@ -173,159 +281,23 @@ var IosMidiDeviceManager = function () {
                     }
                 }
             }
-
-            return midiDevices.map(function (deviceInfo) {
-                return new _IosMidiDevice2.default(Object.assign(deviceInfo, { logger: _this.logger }));
-            });
-        }
-
-        /**
-        * @param {PGMidi/PGMidiSource} source
-        */
-
-    }, {
-        key: '_handleSourceAddedEvent',
-        value: function _handleSourceAddedEvent(source) {
-
-            this._log('Handling the "source added" event for the MIDI source \'' + source.name + '\'.');
-
-            var name = source.name,
-                existingDevice = this._devices.find(function (d) {
-                return d.name === name;
-            });
-
-
-            if (existingDevice) {
-                existingDevice.addSource(source);
-                return this._notifyDeviceUpdated(existingDevice);
-            }
-
-            var newDevice = new _IosMidiDevice2.default({
-                logger: this.logger,
-                name: name,
-                source: source
-            });
-
-            this._addDevice(newDevice);
-        }
-
-        /**
-        * @param {PGMidi/PGMidiSource} source
-        */
-
-    }, {
-        key: '_handleSourceRemovedEvent',
-        value: function _handleSourceRemovedEvent(source) {
-
-            this._log('Handling the "source removed" event for the MIDI source \'' + source.name + '\'.');
-
-            var name = source.name,
-                device = this._devices.find(function (d) {
-                return d.name === name;
-            });
-
-
-            if (!device) {
-                this._warn('Not removing MIDI source, because it matches no existing device.', { name: source.name });
-                return;
-            }
-
-            if (device.isDestination) {
-                // The device is still a destination, so just remove the source.
-                device.removeSource();
-                return this._notifyDeviceUpdated(device);
-            }
-
-            // The device is not a destination, either, so just remove it.
-            this._removeDevice(device);
-        }
-
-        /**
-        * @param {PGMidi/PGMidiDestination} destination
-        */
-
-    }, {
-        key: '_handleDestinationAddedEvent',
-        value: function _handleDestinationAddedEvent(destination) {
-
-            this._log('Handling the "destination added" event for the MIDI destination \'' + destination.name + '\'.');
-
-            var name = destination.name,
-                existingDevice = this._devices.find(function (d) {
-                return d.name === name;
-            });
-
-
-            if (existingDevice) {
-                existingDevice.addDestination(destination);
-                return this._notifyDeviceUpdated(existingDevice);
-            }
-
-            var newDevice = new _IosMidiDevice2.default({
-                logger: this.logger,
-                name: name,
-                destination: destination
-            });
-
-            this._addDevice(newDevice);
-        }
-
-        /**
-        * @param {PGMidi/PGMidiDestination} destination
-        */
-
-    }, {
-        key: '_handleDestinationRemovedEvent',
-        value: function _handleDestinationRemovedEvent(destination) {
-
-            this._log('Handling the "destination removed" event for the MIDI destination \'' + destination.name + '\'.');
-
-            var name = destination.name,
-                device = this._devices.find(function (d) {
-                return d.name === name;
-            });
-
-
-            if (!device) {
-                this._warn('Not removing MIDI destination, because it matches no existing device.', { name: destination.name });
-                return;
-            }
-
-            if (device.isSource) {
-                // The device is still a source, so just remove the destination.
-                device.removeDestination();
-                return this._notifyDeviceUpdated(device);
-            }
-
-            // The device is not a destination, either, so just remove it.
-            this._removeDevice(device);
         }
     }, {
-        key: '_log',
-        value: function _log(message, metadata) {
-            this.logger.info(this.constructor.name + ': ' + message, metadata);
-        }
-    }, {
-        key: '_warn',
-        value: function _warn(message, metadata) {
-            this.logger.warn(this.constructor.name + ': ' + message, metadata);
-        }
-    }, {
-        key: '_notifyDeviceAdded',
-        value: function _notifyDeviceAdded(device) {
+        key: '_notifyDeviceRemoved',
+        value: function _notifyDeviceRemoved(device) {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
 
             try {
 
-                for (var _iterator2 = this._deviceAddedListeners[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                for (var _iterator2 = this._deviceRemovedListeners[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                     var callback = _step2.value;
 
                     try {
                         callback(device);
                     } catch (error) {
-                        this.logger.error('A "device added" listener threw an error.', { error: error });
+                        this.logger.error('A "device removed" listener threw an error.', { error: error });
                     }
                 }
             } catch (err) {
@@ -344,21 +316,21 @@ var IosMidiDeviceManager = function () {
             }
         }
     }, {
-        key: '_notifyDeviceRemoved',
-        value: function _notifyDeviceRemoved(device) {
+        key: '_notifyDeviceUpdated',
+        value: function _notifyDeviceUpdated(device) {
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
 
             try {
 
-                for (var _iterator3 = this._deviceRemovedListeners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                for (var _iterator3 = this._deviceUpdatedListeners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                     var callback = _step3.value;
 
                     try {
                         callback(device);
                     } catch (error) {
-                        this.logger.error('A "device removed" listener threw an error.', { error: error });
+                        this.logger.error('A "device updated" listener threw an error.', { error: error });
                     }
                 }
             } catch (err) {
@@ -376,51 +348,6 @@ var IosMidiDeviceManager = function () {
                 }
             }
         }
-    }, {
-        key: '_notifyDeviceUpdated',
-        value: function _notifyDeviceUpdated(device) {
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-
-                for (var _iterator4 = this._deviceUpdatedListeners[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var callback = _step4.value;
-
-                    try {
-                        callback(device);
-                    } catch (error) {
-                        this.logger.error('A "device updated" listener threw an error.', { error: error });
-                    }
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
-                    }
-                }
-            }
-        }
-
-        /**
-        * Adds the given device to the device list and notifies listeners of the addition.
-        */
-
-    }, {
-        key: '_addDevice',
-        value: function _addDevice(device) {
-
-            this._devices.push(device);
-            this._notifyDeviceAdded(device);
-        }
 
         /**
         * Removes the given device from the device list and notifies listeners of the removal.
@@ -435,6 +362,34 @@ var IosMidiDeviceManager = function () {
             this._devices.splice(index, 1);
             this._notifyDeviceRemoved(device);
         }
+
+        /**
+        * @param {IosMidiPort} port
+        */
+
+    }, {
+        key: '_removePort',
+        value: function _removePort(port) {
+
+            var device = this._devices.find(function (d) {
+                return d.ios.deviceRef === port.ios.deviceRef;
+            });
+
+            if (!device) {
+                this._warn('Not removing MIDI port, because it matches no existing device.', { port: port });
+                return;
+            }
+
+            device.removePort(port);
+
+            if (device.inputPorts.length || device.outputPorts.length) {
+                // This device still has ports left, so just notify that it was updated, but don't remove it.
+                return this._notifyDeviceUpdated(device);
+            }
+
+            // The device has no ports left, so remove it.
+            this._removeDevice(device);
+        }
     }, {
         key: '_validateEventListener',
         value: function _validateEventListener(callback) {
@@ -444,9 +399,9 @@ var IosMidiDeviceManager = function () {
             }
         }
     }, {
-        key: 'devices',
-        get: function get() {
-            return this._devices;
+        key: '_warn',
+        value: function _warn(message, metadata) {
+            this.logger.warn(this.constructor.name + ': ' + message, metadata);
         }
     }]);
 

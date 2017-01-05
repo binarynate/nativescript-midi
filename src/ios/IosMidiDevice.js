@@ -1,13 +1,12 @@
 import { validate, validateAsync } from 'parameter-validator';
 import MidiDevice from '../MidiDevice';
-import { MidiError } from '../errors';
 import MockLogger from '../MockLogger';
-import MidiMessageDelegate from './MidiMessageDelegate';
 import IosMidiInputPort from './IosMidiInputPort';
 import IosMidiOutputPort from './IosMidiOutputPort';
 import IosMidiPort from './IosMidiPort';
 
 /**
+* @property {string}                 name
 * @property {Object}                 ios           - Object exposing iOS-specific properties
 * @property {CoreMidi/MIDIDeviceRef} ios.deviceRef
 */
@@ -23,11 +22,12 @@ export default class IosMidiDevice extends MidiDevice {
     constructor(options) {
 
         super(options);
-        let { name, inputPorts, outputPorts, deviceRef } = validate(options, [ 'name', 'ports', 'deviceRef' ]);
+        let { name, ports, deviceRef } = validate(options, [ 'name', 'ports', 'deviceRef' ]);
+        this.name = name;
         this.logger = options.logger || new MockLogger();
         this.ios = { deviceRef };
         this._ports = ports;
-        this._globalMessageListeners; // Message listeners that are invoked when any port receives a message.
+        this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
     }
 
     /**
