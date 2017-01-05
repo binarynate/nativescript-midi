@@ -1,3 +1,5 @@
+/* globals interop, MIDIEndointGetEntity, MIDIEntityGetDevice */
+
 import { validate } from 'parameter-validator';
 import { getDeviceRefForEndpointRef } from './ios-utils';
 
@@ -18,7 +20,7 @@ export default class IosMidiPort {
         let { connection } = validate(options, [ 'connection' ]);
         this.ios = {};
         this.ios.endpointRef = connection.endpoint;
-        this.ios.deviceRef = getDeviceRefForEndpointRef(connection.endpoint);
+        this.ios.deviceRef = this._getDeviceRefForEndpointRef(connection.endpoint);
         this.ios.endpointName = connection.name;
     }
 
@@ -34,5 +36,20 @@ export default class IosMidiPort {
         } catch (error) {
             return false;
         }
+    }
+
+    /**
+    * @param   {CoreMidi/MIDIEndpointRef} endpointRef
+    * @returns {CoreMidi/MIDIDeviceRef}
+    */
+    _getDeviceRefForEndpointRef(endpointRef) {
+
+        let entityReference = new interop.Reference();
+        MIDIEndointGetEntity(endpointRef, entityReference);
+
+        let deviceReference = new interop.Reference();
+        MIDIEntityGetDevice(entityReference.value, deviceReference);
+
+        return deviceReference.value;
     }
 }

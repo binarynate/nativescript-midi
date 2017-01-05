@@ -2,7 +2,6 @@
 import IosMidiDevice from './IosMidiDevice';
 import MidiDeviceDelegate from './MidiDeviceDelegate';
 import MockLogger from '../MockLogger';
-import { getDeviceRefForEndpointRef } from './ios-utils';
 
 export default class IosMidiDeviceManager {
 
@@ -122,30 +121,47 @@ export default class IosMidiDeviceManager {
     }
 
     /**
-    * @param {PGMidi/PGMidiSource} source
+    * Adds the given device to the device list and notifies listeners of the addition.
     */
-    _handleSourceAddedEvent(source) {
+    _addDevice(device) {
 
-        this._log(`Handling the "source added" event for the MIDI source '${source.name}'.`);
+        this._devices.push(device);
+        this._notifyDeviceAdded(device);
+    }
 
-        let deviceRef = getDeviceRefForEndpointRef(source.endpoint);
+    /**
+    * @param {IosMidiPort} port
+    */
+    _addPort(port) {
 
+        let deviceRef = port.ios.deviceRef;
         let existingDevice = this._devices.find(device => device.ios.deviceRef === deviceRef);
 
         if (existingDevice) {
 
-            let outputPort = new IosMidiOutputPort({ logger: this.logger, source });
-            existingDevice.addOutputPort(source);
+            existingDevice.addPort(port);
             return this._notifyDeviceUpdated(existingDevice);
         }
 
         let newDevice = new IosMidiDevice({
             logger: this.logger,
             name,
-            source
+            ports: [ port ],
+            deviceRef
         });
 
         this._addDevice(newDevice);
+    }
+
+    /**
+    * @param {PGMidi/PGMidiSource} source
+    */
+    _handleSourceAddedEvent(source) {
+
+        this._log(`Handling the "source added" event for the MIDI source '${source.name}'.`);
+
+        let port = new IosMidiOutputPort({ logger: this.logger, source });
+        this._addPort(port);
     }
 
     /**
@@ -155,22 +171,8 @@ export default class IosMidiDeviceManager {
 
         this._log(`Handling the "source removed" event for the MIDI source '${source.name}'.`);
 
-        let { name } = source,
-            device = this._devices.find(d => d.name === name);
-
-        if (!device) {
-            this._warn(`Not removing MIDI source, because it matches no existing device.`, { name: source.name });
-            return;
-        }
-
-        if (device.isDestination) {
-            // The device is still a destination, so just remove the source.
-            device.removeSource();
-            return this._notifyDeviceUpdated(device);
-        }
-
-        // The device is not a destination, either, so just remove it.
-        this._removeDevice(device);
+        let port = new IosMidiOutputPort({ logger: this.logger, source });
+        this._removePort(port);
     }
 
     /**
@@ -180,21 +182,8 @@ export default class IosMidiDeviceManager {
 
         this._log(`Handling the "destination added" event for the MIDI destination '${destination.name}'.`);
 
-        let { name } = destination,
-            existingDevice = this._devices.find(d => d.name === name);
-
-        if (existingDevice) {
-            existingDevice.addDestination(destination);
-            return this._notifyDeviceUpdated(existingDevice);
-        }
-
-        let newDevice = new IosMidiDevice({
-            logger: this.logger,
-            name,
-            destination
-        });
-
-        this._addDevice(newDevice);
+        let port = new IosMidiInputPort({ logger: this.logger, destination });
+        this._addPort(port);
     }
 
     /**
@@ -204,30 +193,12 @@ export default class IosMidiDeviceManager {
 
         this._log(`Handling the "destination removed" event for the MIDI destination '${destination.name}'.`);
 
-        let { name } = destination,
-            device = this._devices.find(d => d.name === name);
-
-        if (!device) {
-            this._warn(`Not removing MIDI destination, because it matches no existing device.`, { name: destination.name });
-            return;
-        }
-
-        if (device.isSource) {
-            // The device is still a source, so just remove the destination.
-            device.removeDestination();
-            return this._notifyDeviceUpdated(device);
-        }
-
-        // The device is not a destination, either, so just remove it.
-        this._removeDevice(device);
+        let port = new IosMidiInputPort({ logger: this.logger, destination });
+        this._removePort(port);
     }
 
     _log(message, metadata) {
         this.logger.info(`${this.constructor.name}: ${message}`, metadata);
-    }
-
-    _warn(message, metadata) {
-        this.logger.warn(`${this.constructor.name}: ${message}`, metadata);
     }
 
     _notifyDeviceAdded(device) {
@@ -264,15 +235,6 @@ export default class IosMidiDeviceManager {
     }
 
     /**
-    * Adds the given device to the device list and notifies listeners of the addition.
-    */
-    _addDevice(device) {
-
-        this._devices.push(device);
-        this._notifyDeviceAdded(device);
-    }
-
-    /**
     * Removes the given device from the device list and notifies listeners of the removal.
     */
     _removeDevice(device) {
@@ -283,10 +245,37 @@ export default class IosMidiDeviceManager {
         this._notifyDeviceRemoved(device);
     }
 
+    /**
+    * @param {IosMidiPort} port
+    */
+    _removePort(port) {
+
+        let device = this._devices.find(d => d.ios.deviceRef === port.ios.deviceRef);
+
+        if (!device) {
+            this._warn(`Not removing MIDI port, because it matches no existing device.`, { port });
+            return;
+        }
+
+        device.removePort(port);
+
+        if (device.inputPorts.length || device.outputPorts.length) {
+            // This device still has ports left, so just notify that it was updated, but don't remove it.
+            return this._notifyDeviceUpdated(device);
+        }
+
+        // The device has no ports left, so remove it.
+        this._removeDevice(device);
+    }
+
     _validateEventListener(callback) {
 
         if (typeof callback !== 'function') {
             throw new Error('The event listener must be a function.');
         }
+    }
+
+    _warn(message, metadata) {
+        this.logger.warn(`${this.constructor.name}: ${message}`, metadata);
     }
 }
