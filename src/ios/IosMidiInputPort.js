@@ -5,11 +5,15 @@ export default class IosMidiInputPort  {
     /**
     * @param {Object}                   options
     * @param {PGMidi/PGMidiDestination} options.destination
+    * @param {Object}                   options.logger
     */
     constructor(options) {
 
-        validate(options, [ 'destination' ], this);
-        this._destination = options.destination;
+        let { destination, logger } = validate(options, [ 'destination', 'logger' ]);
+        super({ connection: destination });
+
+        this._destination = destination;
+        this._logger = logger;
     }
 
 }

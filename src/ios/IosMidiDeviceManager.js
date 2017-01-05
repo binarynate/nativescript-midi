@@ -2,6 +2,7 @@
 import IosMidiDevice from './IosMidiDevice';
 import MidiDeviceDelegate from './MidiDeviceDelegate';
 import MockLogger from '../MockLogger';
+import { getDeviceRefForEndpointRef } from './ios-utils';
 
 export default class IosMidiDeviceManager {
 
@@ -31,7 +32,6 @@ export default class IosMidiDeviceManager {
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
-        this._devices = this._discoverDevices();
     }
 
     /**
@@ -96,41 +96,29 @@ export default class IosMidiDeviceManager {
     }
 
     /**
-    * Performs an initial search for available MIDI devices.
+    * Performs an initial search for available MIDI devices. This method must be called before
+    * accessing `devices`.
     *
-    * @returns {Array.<MidiDevice>}
+    * @returns {Promise.<Array.<IosMidiDevice>>}
     */
-    _discoverDevices() {
+    discoverDevices() {
 
-        let midiDevices = Array.from(this._midiClient.sources).map(source => ({ source, name: source.name }));
+        return Promise.resolve()
+        .then(() => {
 
-        for (let destination of this._midiClient.destinations) {
-
-            let device = midiDevices.find(d => d.name === destination.name);
-
-            if (device) {
-                device.destination = destination;
-            } else {
-                midiDevices.push({ destination, name: destination.name });
+            if (this._devices) {
+                return this._devices
             }
-        }
 
-        return midiDevices.map(deviceInfo => new IosMidiDevice(Object.assign(deviceInfo, { logger: this.logger })));
-    }
-
-    /**
-    * @param   {PGMidi/PGMidiConnection} connection
-    * @returns {CoreMidi/MIDIDeviceRef}
-    */
-    _getCoreMidiDeviceForPGConnection(connection) {
-
-        let entityReference = new interop.Reference();
-        MIDIEndointGetEntity(connection.endpoint, entityReference);
-
-        let deviceReference = new interop.Reference();
-        MIDIEntityGetDevice(entityReference.value, deviceReference);
-
-        return deviceReference.value;
+            return IosMidiDevice.parseDevices({
+                logger: this.logger,
+                midiClient: this._midiClient
+            })
+            .then(devices => {
+                this._devices = devices;
+                return devices;
+            });
+        });
     }
 
     /**
@@ -140,11 +128,14 @@ export default class IosMidiDeviceManager {
 
         this._log(`Handling the "source added" event for the MIDI source '${source.name}'.`);
 
-        let { name } = source,
-            existingDevice = this._devices.find(d => d.name === name);
+        let deviceRef = getDeviceRefForEndpointRef(source.endpoint);
+
+        let existingDevice = this._devices.find(device => device.ios.deviceRef === deviceRef);
 
         if (existingDevice) {
-            existingDevice.addSource(source);
+
+            let outputPort = new IosMidiOutputPort({ logger: this.logger, source });
+            existingDevice.addOutputPort(source);
             return this._notifyDeviceUpdated(existingDevice);
         }
 
