@@ -1,4 +1,5 @@
 /*globals PGMidi */
+/* jshint browser: false */
 import IosMidiDevice from './IosMidiDevice';
 import IosMidiOutputPort from './IosMidiOutputPort';
 import IosMidiInputPort from './IosMidiInputPort';
@@ -135,7 +136,7 @@ export default class IosMidiDeviceManager {
 
         let newDevice = new IosMidiDevice({
             logger: this.logger,
-            name,
+            name: port.ios.endpointName,
             ports: [ port ],
             deviceRef
         });

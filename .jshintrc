@@ -7,7 +7,7 @@
     "eqeqeq": true,
     "unused": true,
     "undef": true,
-    "browser": true,
+    "browser": false,
     "node": true,
     "esnext": true,
     "mocha": true,
