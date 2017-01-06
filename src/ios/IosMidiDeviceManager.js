@@ -101,14 +101,12 @@ export default class IosMidiDeviceManager {
                 return this._devices;
             }
 
-            return IosMidiDevice.parseDevices({
+            this._devices = IosMidiDevice.parseDevices({
                 logger: this.logger,
                 midiClient: this._midiClient
-            })
-            .then(devices => {
-                this._devices = devices;
-                return devices;
             });
+
+            return this._devices;
         });
     }
 

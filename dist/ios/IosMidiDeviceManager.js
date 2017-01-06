@@ -138,13 +138,12 @@ var IosMidiDeviceManager = function () {
                     return _this._devices;
                 }
 
-                return _IosMidiDevice2.default.parseDevices({
+                _this._devices = _IosMidiDevice2.default.parseDevices({
                     logger: _this.logger,
                     midiClient: _this._midiClient
-                }).then(function (devices) {
-                    _this._devices = devices;
-                    return devices;
                 });
+
+                return _this._devices;
             });
         }
 
