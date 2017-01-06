@@ -122,7 +122,7 @@ export default class IosMidiDevice extends MidiDevice {
     removePort(port) {
 
         try {
-            let index = this._ports.findIndex(p => p.sameAs(port));
+            let index = this._ports.findIndex(p => p.isSame(port));
 
             if (index === -1) {
                 this._warn('Not removing unrecognized MIDI port.', { port });

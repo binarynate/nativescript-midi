@@ -176,7 +176,7 @@ var IosMidiDevice = function (_MidiDevice) {
 
             try {
                 var index = this._ports.findIndex(function (p) {
-                    return p.sameAs(port);
+                    return p.isSame(port);
                 });
 
                 if (index === -1) {
