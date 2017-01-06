@@ -1,4 +1,4 @@
-/* globals interop, MIDIEndointGetEntity, MIDIEntityGetDevice */
+/* globals interop, MIDIEndpointGetEntity, MIDIEntityGetDevice */
 
 import { validate } from 'parameter-validator';
 
@@ -46,7 +46,7 @@ export default class IosMidiPort {
     _getDeviceRefForEndpointRef(endpointRef) {
 
         let entityReference = new interop.Reference();
-        MIDIEndointGetEntity(endpointRef, entityReference);
+        MIDIEndpointGetEntity(endpointRef, entityReference);
 
         let deviceReference = new interop.Reference();
         MIDIEntityGetDevice(entityReference.value, deviceReference);
