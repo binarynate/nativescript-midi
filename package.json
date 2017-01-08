@@ -23,7 +23,7 @@
     "jshint": "^2.9.4"
   },
   "dependencies": {
-    "nativescript-utilities": "git+ssh://git@bitbucket.org/binarynate/nativescript-utilities.git",
+    "nativescript-utilities": "git+ssh://git@github.com:BinaryNate/nativescript-utilities.git",
     "parameter-validator": "^1.0.0"
   }
 }

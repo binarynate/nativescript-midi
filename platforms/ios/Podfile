@@ -1,3 +1,3 @@
 pod 'PGMidi', :git => 'https://github.com/petegoodliffe/PGMidi.git'
-pod 'cocoa-midi-message-parser', :git => 'git@bitbucket.org:binarynate/cocoa-midi-message-parser.git', :submodules => true
+pod 'cocoa-midi-message-parser', :git => 'git@github.com:BinaryNate/cocoa-midi-message-parser.git', :submodules => true
 
