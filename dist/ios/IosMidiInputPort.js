@@ -8,6 +8,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _parameterValidator = require('parameter-validator');
 
+var _nativescriptUtilities = require('nativescript-utilities');
+
 var _IosMidiPort2 = require('./IosMidiPort');
 
 var _IosMidiPort3 = _interopRequireDefault(_IosMidiPort2);
@@ -42,11 +44,16 @@ var IosMidiInputPort = function (_IosMidiPort) {
     }
 
     /**
-    * Sends the given MIDI bytes to the input port.
+    * Sends the given MIDI bytes to the input port given a Uint8Array or NativeScript buffer containing
+    * MIDI message bytes.
     *
-    * @param {Object}            options
-    * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
-    * @param {number}            options.length - Number of bytes
+    * @param   {Object}            options
+    * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send to the device.
+    *                                                          Required if `bytesReference` is not provided.
+    * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
+    *                                                          Required if `bytes` is not provided
+    * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
+    * @returns {Promise}
     */
 
 
@@ -55,13 +62,21 @@ var IosMidiInputPort = function (_IosMidiPort) {
         value: function send(options) {
             var _this2 = this;
 
-            return (0, _parameterValidator.validateAsync)(options, ['bytes', 'length']).then(function (_ref) {
+            return (0, _parameterValidator.validateAsync)(options, [['bytes', 'bytesReference']]).then(function (_ref) {
                 var bytes = _ref.bytes,
+                    bytesReference = _ref.bytesReference,
                     length = _ref.length;
 
 
+                if (bytes) {
+                    length = bytes.length;
+                    bytesReference = (0, _nativescriptUtilities.convertUint8ArrayToReference)(bytes);
+                } else {
+                    (0, _parameterValidator.validate)(options, ['length']);
+                }
+
                 _this2._log('Sending MIDI message bytes...');
-                _this2._destination.sendBytesSize(bytes, length);
+                _this2._destination.sendBytesSize(bytesReference, length);
                 _this2._log('Finished sending MIDI message bytes.');
             });
         }

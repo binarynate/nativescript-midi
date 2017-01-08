@@ -110,23 +110,25 @@ var IosMidiDevice = function (_MidiDevice) {
         }
 
         /**
-        * Sends the given MIDI bytes to all of the device's input ports.
+        * Sends the given MIDI bytes to all of the device's input ports given a Uint8Array or NativeScript buffer containing
+        * MIDI message bytes.
         *
-        * @param {Object}            options
-        * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
-        * @param {number}            options.length - Number of bytes
+        * @param   {Object}            options
+        * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send.
+        *                                                          Required if `bytesReference` is not provided.
+        * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
+        *                                                          Required if `bytes` is not provided
+        * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
+        * @returns {Promise}
         */
 
     }, {
         key: 'send',
         value: function send(options) {
-            var _this2 = this;
-
-            return (0, _parameterValidator.validateAsync)(options, ['bytes', 'length']).then(function () {
-                return Promise.all(_this2.inputPorts.map(function (port) {
-                    return port.send(options);
-                }));
-            });
+            // Parameter validation is implemented in `port.send()`.
+            return Promise.all(this.inputPorts.map(function (port) {
+                return port.send(options);
+            }));
         }
 
         /*

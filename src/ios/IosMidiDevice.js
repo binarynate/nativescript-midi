@@ -1,4 +1,4 @@
-import { validate, validateAsync } from 'parameter-validator';
+import { validate } from 'parameter-validator';
 import MidiDevice from '../MidiDevice';
 import MockLogger from '../MockLogger';
 import IosMidiInputPort from './IosMidiInputPort';
@@ -72,18 +72,20 @@ export default class IosMidiDevice extends MidiDevice {
     }
 
     /**
-    * Sends the given MIDI bytes to all of the device's input ports.
+    * Sends the given MIDI bytes to all of the device's input ports given a Uint8Array or NativeScript buffer containing
+    * MIDI message bytes.
     *
-    * @param {Object}            options
-    * @param {interop.Reference} options.bytes  - NativeScript reference to the buffer containing the message
-    * @param {number}            options.length - Number of bytes
+    * @param   {Object}            options
+    * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send.
+    *                                                          Required if `bytesReference` is not provided.
+    * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
+    *                                                          Required if `bytes` is not provided
+    * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
+    * @returns {Promise}
     */
     send(options) {
-
-        return validateAsync(options, [ 'bytes', 'length' ])
-        .then(() => {
-            return Promise.all(this.inputPorts.map(port => port.send(options)));
-        });
+        // Parameter validation is implemented in `port.send()`.
+        return Promise.all(this.inputPorts.map(port => port.send(options)));
     }
 
     /*
