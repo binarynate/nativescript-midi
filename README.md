@@ -111,6 +111,8 @@ This module is implemented in ES 6 and transpiled to ES 5 for export. To build t
 npm run build
 ```
 
+There's also a git pre-commit hook that automatically builds upon commit, since the dist directory is committed.
+
 ### Linting
 
 ```
