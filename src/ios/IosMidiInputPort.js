@@ -32,13 +32,15 @@ export default class IosMidiInputPort extends IosMidiPort  {
     send(options) {
 
         return validateAsync(options, [[ 'bytes', 'bytesReference' ]])
-        .then(({ bytes, bytesReference, length }) => {
+        .then(({ bytes, bytesReference }) => {
+
+            let length;
 
             if (bytes) {
                 length = bytes.length;
                 bytesReference = convertUint8ArrayToReference(bytes);
             } else {
-                validate(options, [ 'length' ]);
+                ({ length } = validate(options, [ 'length' ]));
             }
 
             this._log(`Sending MIDI message bytes...`);

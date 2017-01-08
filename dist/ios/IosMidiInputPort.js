@@ -64,15 +64,18 @@ var IosMidiInputPort = function (_IosMidiPort) {
 
             return (0, _parameterValidator.validateAsync)(options, [['bytes', 'bytesReference']]).then(function (_ref) {
                 var bytes = _ref.bytes,
-                    bytesReference = _ref.bytesReference,
-                    length = _ref.length;
+                    bytesReference = _ref.bytesReference;
 
+
+                var length = void 0;
 
                 if (bytes) {
                     length = bytes.length;
                     bytesReference = (0, _nativescriptUtilities.convertUint8ArrayToReference)(bytes);
                 } else {
-                    (0, _parameterValidator.validate)(options, ['length']);
+                    var _validate2 = (0, _parameterValidator.validate)(options, ['length']);
+
+                    length = _validate2.length;
                 }
 
                 _this2._log('Sending MIDI message bytes...');
