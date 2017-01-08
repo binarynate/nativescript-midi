@@ -1,11 +1,11 @@
 {
   "name": "nativescript-midi",
   "version": "0.0.1",
-  "description": "",
+  "description": "A NativeScript plugin for communicating with MIDI devices (e.g. musical instruments or apps).",
+  "keywords": [ "NativeScript", "MIDI", "music", "keyboard", "musical", "instrument", "iOS" ],
   "main": "dist/index.js",
   "nativescript": {
     "platforms": {
-      "android": "2.3.0",
       "ios": "2.3.0"
     }
   },
