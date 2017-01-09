@@ -22,7 +22,7 @@
     "build": "npm run lint && rm -rf dist && babel src --out-dir dist",
     "reinstall-utils": "rm -rf node_modules/nativescript-utilities && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "jsdoc2md src/*.js > api.md"
+    "docs": "jsdoc2md src/*.js > docs/api.md"
   },
   "author": "Nathan Hill",
   "license": "MIT",

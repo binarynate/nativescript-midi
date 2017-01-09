@@ -25,7 +25,7 @@ An application interacts with the plugin through interfaces which resemble those
 - `MidiInputPort`: Provides a method by which an application can send MIDI messages to the device.
 - `MidiOutputPort`: Notifies the application of messages received from the device.
 
-**For more information on these interfaces, check out the [API docs](./api.md).**
+**For more information on these interfaces, check out the [API docs](docs/api.md).**
 
 ## Example
 

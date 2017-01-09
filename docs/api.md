@@ -7,20 +7,14 @@
 <dt><a href="#MidiDeviceManager">MidiDeviceManager</a></dt>
 <dd><p>Responsible for fetching available MIDI devices and notifying the application of device changes.</p>
 </dd>
+<dt><a href="#MidiInputPort">MidiInputPort</a></dt>
+<dd><p>The input port of a MIDI device which provides a method by which an application can send MIDI messages to the device.</p>
+</dd>
+<dt><a href="#MidiOutputPort">MidiOutputPort</a></dt>
+<dd><p>The output of a MIDI device which notifies the application of messages received from the device.</p>
+</dd>
 <dt><a href="#NotImplementedError">NotImplementedError</a></dt>
 <dd><p>Error that indicates that an abstract or unimplemented method has been invoked.</p>
-</dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#send">send(options)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Sends the given MIDI bytes to the input port given a Uint8Array or NativeScript buffer containing
-MIDI message bytes.</p>
-</dd>
-<dt><a href="#addMessageListener">addMessageListener(messageListener)</a></dt>
-<dd><p>Adds a listener that handles MIDI message received from the port.</p>
 </dd>
 </dl>
 
@@ -45,8 +39,8 @@ A MIDI device with input ports and output ports through which communication occu
 
 * [MidiDevice](#MidiDevice)
     * [.name](#MidiDevice+name) : <code>string</code>
-    * [.inputPorts](#MidiDevice+inputPorts) : <code>Array.&lt;MidiInputPort&gt;</code>
-    * [.outputPorts](#MidiDevice+outputPorts) : <code>Array.&lt;MidiOutputPort&gt;</code>
+    * [.inputPorts](#MidiDevice+inputPorts) : <code>[Array.&lt;MidiInputPort&gt;](#MidiInputPort)</code>
+    * [.outputPorts](#MidiDevice+outputPorts) : <code>[Array.&lt;MidiOutputPort&gt;](#MidiOutputPort)</code>
     * [.addMessageListener(messageListener)](#MidiDevice+addMessageListener)
     * [.send(options)](#MidiDevice+send) ⇒ <code>Promise</code>
 
@@ -56,11 +50,11 @@ A MIDI device with input ports and output ports through which communication occu
 **Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
 <a name="MidiDevice+inputPorts"></a>
 
-### midiDevice.inputPorts : <code>Array.&lt;MidiInputPort&gt;</code>
+### midiDevice.inputPorts : <code>[Array.&lt;MidiInputPort&gt;](#MidiInputPort)</code>
 **Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
 <a name="MidiDevice+outputPorts"></a>
 
-### midiDevice.outputPorts : <code>Array.&lt;MidiOutputPort&gt;</code>
+### midiDevice.outputPorts : <code>[Array.&lt;MidiOutputPort&gt;](#MidiOutputPort)</code>
 **Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
 <a name="MidiDevice+addMessageListener"></a>
 
@@ -101,11 +95,6 @@ Responsible for fetching available MIDI devices and notifying the application of
     * [.addDeviceRemovedListener(callback)](#MidiDeviceManager+addDeviceRemovedListener)
     * [.addDeviceUpdatedListener(callback)](#MidiDeviceManager+addDeviceUpdatedListener)
     * *[.getDevices()](#MidiDeviceManager+getDevices) ⇒ <code>Promise.&lt;Array.&lt;MidiDevice&gt;&gt;</code>*
-    * [._addDevice(device)](#MidiDeviceManager+_addDevice)
-    * [._notifyDeviceAdded(device)](#MidiDeviceManager+_notifyDeviceAdded)
-    * [._notifyDeviceRemoved(device)](#MidiDeviceManager+_notifyDeviceRemoved)
-    * [._notifyDeviceUpdated(device)](#MidiDeviceManager+_notifyDeviceUpdated)
-    * [._removeDevice(device)](#MidiDeviceManager+_removeDevice)
 
 <a name="new_MidiDeviceManager_new"></a>
 
@@ -158,79 +147,19 @@ a destination) becomes a MIDI source.
 Gets the available MIDI devices.
 
 **Kind**: instance abstract method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-<a name="MidiDeviceManager+_addDevice"></a>
+<a name="MidiInputPort"></a>
 
-### midiDeviceManager._addDevice(device)
-Adds the given device to the device list and notifies listeners of the addition.
-
-**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-**Access:** protected  
-
-| Param | Type |
-| --- | --- |
-| device | <code>[MidiDevice](#MidiDevice)</code> | 
-
-<a name="MidiDeviceManager+_notifyDeviceAdded"></a>
-
-### midiDeviceManager._notifyDeviceAdded(device)
-Notifies listeners that the given MIDI device has been added.
-
-**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-**Access:** protected  
-
-| Param | Type |
-| --- | --- |
-| device | <code>[MidiDevice](#MidiDevice)</code> | 
-
-<a name="MidiDeviceManager+_notifyDeviceRemoved"></a>
-
-### midiDeviceManager._notifyDeviceRemoved(device)
-Notifies listeners that the given MIDI device has been removed.
-
-**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-**Access:** protected  
-
-| Param | Type |
-| --- | --- |
-| device | <code>[MidiDevice](#MidiDevice)</code> | 
-
-<a name="MidiDeviceManager+_notifyDeviceUpdated"></a>
-
-### midiDeviceManager._notifyDeviceUpdated(device)
-Notifies listeners that the given MIDI device has been updated (e.g. removed port, etc).
-
-**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-**Access:** protected  
-
-| Param | Type |
-| --- | --- |
-| device | <code>[MidiDevice](#MidiDevice)</code> | 
-
-<a name="MidiDeviceManager+_removeDevice"></a>
-
-### midiDeviceManager._removeDevice(device)
-Removes the given device from the device list and notifies listeners of the removal.
-
-**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
-**Access:** protected  
-
-| Param | Type |
-| --- | --- |
-| device | <code>[MidiDevice](#MidiDevice)</code> | 
-
-<a name="NotImplementedError"></a>
-
-## NotImplementedError
-Error that indicates that an abstract or unimplemented method has been invoked.
+## MidiInputPort
+The input port of a MIDI device which provides a method by which an application can send MIDI messages to the device.
 
 **Kind**: global class  
-<a name="send"></a>
+<a name="MidiInputPort+send"></a>
 
-## *send(options) ⇒ <code>Promise</code>*
+### *midiInputPort.send(options) ⇒ <code>Promise</code>*
 Sends the given MIDI bytes to the input port given a Uint8Array or NativeScript buffer containing
 MIDI message bytes.
 
-**Kind**: global abstract function  
+**Kind**: instance abstract method of <code>[MidiInputPort](#MidiInputPort)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -239,17 +168,29 @@ MIDI message bytes.
 | [options.bytesReference] | <code>interop.Reference</code> | NativeScript reference to the buffer containing the MIDI message bytes to send.                                                          Required if `bytes` is not provided |
 | [options.length] | <code>number</code> | Number of bytes. Required if `bytesReference` is provided. |
 
-<a name="addMessageListener"></a>
+<a name="MidiOutputPort"></a>
 
-## *addMessageListener(messageListener)*
+## MidiOutputPort
+The output of a MIDI device which notifies the application of messages received from the device.
+
+**Kind**: global class  
+<a name="MidiOutputPort+addMessageListener"></a>
+
+### *midiOutputPort.addMessageListener(messageListener)*
 Adds a listener that handles MIDI message received from the port.
 
-**Kind**: global abstract function  
+**Kind**: instance abstract method of <code>[MidiOutputPort](#MidiOutputPort)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | messageListener | <code>[midiMessageListener](#midiMessageListener)</code> | Callback that handles an incoming MIDI message from the port. |
 
+<a name="NotImplementedError"></a>
+
+## NotImplementedError
+Error that indicates that an abstract or unimplemented method has been invoked.
+
+**Kind**: global class  
 <a name="midiMessageListener"></a>
 
 ## midiMessageListener : <code>function</code>
@@ -258,7 +199,7 @@ Adds a listener that handles MIDI message received from the port.
 | Param | Type | Description |
 | --- | --- | --- |
 | messages | <code>Array.&lt;Uint8Array&gt;</code> | Array where each item is a Uint8Array containing a MIDI message. |
-| outputPort | <code>MidiOutputPort</code> | Output port from which the bytes were received. |
+| outputPort | <code>[MidiOutputPort](#MidiOutputPort)</code> | Output port from which the bytes were received. |
 
 <a name="deviceEventCallback"></a>
 
@@ -279,5 +220,5 @@ A callback that responds to a device change event.
 | Param | Type | Description |
 | --- | --- | --- |
 | messages | <code>Array.&lt;Uint8Array&gt;</code> | Array where each item is a Uint8Array containing a MIDI message. |
-| outputPort | <code>MidiOutputPort</code> | Output port from which the bytes were received. |
+| outputPort | <code>[MidiOutputPort](#MidiOutputPort)</code> | Output port from which the bytes were received. |
 
