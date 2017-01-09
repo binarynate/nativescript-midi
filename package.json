@@ -2,7 +2,15 @@
   "name": "nativescript-midi",
   "version": "0.0.1",
   "description": "A NativeScript plugin for communicating with MIDI devices (e.g. musical instruments or apps).",
-  "keywords": [ "NativeScript", "MIDI", "music", "keyboard", "musical", "instrument", "iOS" ],
+  "keywords": [
+    "NativeScript",
+    "MIDI",
+    "music",
+    "keyboard",
+    "musical",
+    "instrument",
+    "iOS"
+  ],
   "main": "dist/index.js",
   "nativescript": {
     "platforms": {
@@ -13,13 +21,15 @@
     "lint": "jshint src",
     "build": "npm run lint && rm -rf dist && babel src --out-dir dist",
     "reinstall-utils": "rm -rf node_modules/nativescript-utilities && npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "jsdoc2md src/*.js > api.md"
   },
   "author": "Nathan Hill",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
+    "jsdoc-to-markdown": "^2.0.1",
     "jshint": "^2.9.4"
   },
   "dependencies": {
