@@ -132,3 +132,7 @@ nativescript-midi
         |
         |-- midi-message-parser
 ```
+
+## Attribution
+
+Thank you to Pete Goodliffe, author of the open source [PGMidi](https://github.com/petegoodliffe/PGMidi) library that is used internally by nativescript-midi.
