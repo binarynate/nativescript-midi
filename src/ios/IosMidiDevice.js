@@ -32,6 +32,7 @@ export default class IosMidiDevice extends MidiDevice {
 
     /**
     * @type {Array.<IosMidiInputPort>}
+    * @override
     */
     get inputPorts() {
         return this._ports.filter(p => p instanceof IosMidiInputPort);
@@ -39,53 +40,10 @@ export default class IosMidiDevice extends MidiDevice {
 
     /**
     * @type {Array.<IosMidiOutputPort>}
+    * @override
     */
     get outputPorts() {
         return this._ports.filter(p => p instanceof IosMidiOutputPort);
-    }
-
-    /**
-    * @callback midiMessageListener
-    * @param {Array.<Uint8Array>} messages   - Array where each item is a Uint8Array containing a MIDI message.
-    * @param {IosMidiOutputPort}  outputPort - Output port from which the bytes were received.
-    */
-
-    /**
-    * Adds a listener that is invoked when any of the device's output ports sends a message.
-    *
-    * @param {midiMessageListener} messageListener
-    */
-    addMessageListener(messageListener) {
-
-        if (typeof messageListener !== 'function') {
-            throw new Error('messageListener must be a function');
-        }
-
-        if (this._globalMessageListeners.includes(messageListener)) {
-            this._warn('Not device global MIDI message listener that has already been added.');
-            return;
-        }
-
-        this._log('Adding device global MIDI message listener');
-        this._globalMessageListeners.push(messageListener);
-        this.outputPorts.forEach(port => port.addMessageListener(messageListener));
-    }
-
-    /**
-    * Sends the given MIDI bytes to all of the device's input ports given a Uint8Array or NativeScript buffer containing
-    * MIDI message bytes.
-    *
-    * @param   {Object}            options
-    * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send.
-    *                                                          Required if `bytesReference` is not provided.
-    * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
-    *                                                          Required if `bytes` is not provided
-    * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
-    * @returns {Promise}
-    */
-    send(options) {
-        // Parameter validation is implemented in `port.send()`.
-        return Promise.all(this.inputPorts.map(port => port.send(options)));
     }
 
     /*
@@ -164,13 +122,5 @@ export default class IosMidiDevice extends MidiDevice {
             return new IosMidiDevice({ logger, name, ports, deviceRef });
         });
         return devices;
-    }
-
-    _log(message, metadata) {
-        this.logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
-    }
-
-    _warn(message, metadata) {
-        this.logger.warn(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
 }
