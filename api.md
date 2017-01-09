@@ -1,6 +1,9 @@
 ## Classes
 
 <dl>
+<dt><a href="#MidiDevice">MidiDevice</a></dt>
+<dd><p>A MIDI device with input ports and output ports through which communication occurs.</p>
+</dd>
 <dt><a href="#MidiDeviceManager">MidiDeviceManager</a></dt>
 <dd><p>Responsible for fetching available MIDI devices and notifying the application of device changes.</p>
 </dd>
@@ -9,31 +12,9 @@
 </dd>
 </dl>
 
-## Members
-
-<dl>
-<dt><a href="#name">name</a> : <code>string</code></dt>
-<dd></dd>
-<dt><a href="#inputPorts">inputPorts</a> : <code>Array.&lt;MidiInputPort&gt;</code></dt>
-<dd></dd>
-<dt><a href="#outputPorts">outputPorts</a> : <code>Array.&lt;MidiOutputPort&gt;</code></dt>
-<dd></dd>
-</dl>
-
 ## Functions
 
 <dl>
-<dt><a href="#addMessageListener">addMessageListener(messageListener)</a></dt>
-<dd><p>Adds a listener that is invoked when any of the device&#39;s output ports sends a message.</p>
-</dd>
-<dt><a href="#send">send(options)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Sends the given MIDI bytes to all of the device&#39;s input ports given a Uint8Array or NativeScript buffer containing
-MIDI message bytes.</p>
-</dd>
-<dt><a href="#_log">_log()</a></dt>
-<dd></dd>
-<dt><a href="#_warn">_warn()</a></dt>
-<dd></dd>
 <dt><a href="#send">send(options)</a> ⇒ <code>Promise</code></dt>
 <dd><p>Sends the given MIDI bytes to the input port given a Uint8Array or NativeScript buffer containing
 MIDI message bytes.</p>
@@ -54,6 +35,58 @@ MIDI message bytes.</p>
 <dt><a href="#midiMessageListener">midiMessageListener</a> : <code>function</code></dt>
 <dd></dd>
 </dl>
+
+<a name="MidiDevice"></a>
+
+## MidiDevice
+A MIDI device with input ports and output ports through which communication occurs.
+
+**Kind**: global class  
+
+* [MidiDevice](#MidiDevice)
+    * [.name](#MidiDevice+name) : <code>string</code>
+    * [.inputPorts](#MidiDevice+inputPorts) : <code>Array.&lt;MidiInputPort&gt;</code>
+    * [.outputPorts](#MidiDevice+outputPorts) : <code>Array.&lt;MidiOutputPort&gt;</code>
+    * [.addMessageListener(messageListener)](#MidiDevice+addMessageListener)
+    * [.send(options)](#MidiDevice+send) ⇒ <code>Promise</code>
+
+<a name="MidiDevice+name"></a>
+
+### midiDevice.name : <code>string</code>
+**Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
+<a name="MidiDevice+inputPorts"></a>
+
+### midiDevice.inputPorts : <code>Array.&lt;MidiInputPort&gt;</code>
+**Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
+<a name="MidiDevice+outputPorts"></a>
+
+### midiDevice.outputPorts : <code>Array.&lt;MidiOutputPort&gt;</code>
+**Kind**: instance property of <code>[MidiDevice](#MidiDevice)</code>  
+<a name="MidiDevice+addMessageListener"></a>
+
+### midiDevice.addMessageListener(messageListener)
+Adds a listener that is invoked when any of the device's output ports sends a message.
+
+**Kind**: instance method of <code>[MidiDevice](#MidiDevice)</code>  
+
+| Param | Type |
+| --- | --- |
+| messageListener | <code>[midiMessageListener](#midiMessageListener)</code> | 
+
+<a name="MidiDevice+send"></a>
+
+### midiDevice.send(options) ⇒ <code>Promise</code>
+Sends the given MIDI bytes to all of the device's input ports given a Uint8Array or NativeScript buffer containing
+MIDI message bytes.
+
+**Kind**: instance method of <code>[MidiDevice](#MidiDevice)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> |  |
+| [options.bytes] | <code>Uin8Array</code> | MIDI message bytes to send.                                                          Required if `bytesReference` is not provided. |
+| [options.bytesReference] | <code>interop.Reference</code> | NativeScript reference to the buffer containing the MIDI message bytes to send.                                                          Required if `bytes` is not provided |
+| [options.length] | <code>number</code> | Number of bytes. Required if `bytesReference` is provided. |
 
 <a name="MidiDeviceManager"></a>
 
@@ -135,7 +168,7 @@ Adds the given device to the device list and notifies listeners of the addition.
 
 | Param | Type |
 | --- | --- |
-| device | <code>MidiDevice</code> | 
+| device | <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="MidiDeviceManager+_notifyDeviceAdded"></a>
 
@@ -147,7 +180,7 @@ Notifies listeners that the given MIDI device has been added.
 
 | Param | Type |
 | --- | --- |
-| device | <code>MidiDevice</code> | 
+| device | <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="MidiDeviceManager+_notifyDeviceRemoved"></a>
 
@@ -159,7 +192,7 @@ Notifies listeners that the given MIDI device has been removed.
 
 | Param | Type |
 | --- | --- |
-| device | <code>MidiDevice</code> | 
+| device | <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="MidiDeviceManager+_notifyDeviceUpdated"></a>
 
@@ -171,7 +204,7 @@ Notifies listeners that the given MIDI device has been updated (e.g. removed por
 
 | Param | Type |
 | --- | --- |
-| device | <code>MidiDevice</code> | 
+| device | <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="MidiDeviceManager+_removeDevice"></a>
 
@@ -183,7 +216,7 @@ Removes the given device from the device list and notifies listeners of the remo
 
 | Param | Type |
 | --- | --- |
-| device | <code>MidiDevice</code> | 
+| device | <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="NotImplementedError"></a>
 
@@ -191,54 +224,6 @@ Removes the given device from the device list and notifies listeners of the remo
 Error that indicates that an abstract or unimplemented method has been invoked.
 
 **Kind**: global class  
-<a name="name"></a>
-
-## name : <code>string</code>
-**Kind**: global variable  
-<a name="inputPorts"></a>
-
-## inputPorts : <code>Array.&lt;MidiInputPort&gt;</code>
-**Kind**: global variable  
-<a name="outputPorts"></a>
-
-## outputPorts : <code>Array.&lt;MidiOutputPort&gt;</code>
-**Kind**: global variable  
-<a name="addMessageListener"></a>
-
-## addMessageListener(messageListener)
-Adds a listener that is invoked when any of the device's output ports sends a message.
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| messageListener | <code>[midiMessageListener](#midiMessageListener)</code> | 
-
-<a name="send"></a>
-
-## send(options) ⇒ <code>Promise</code>
-Sends the given MIDI bytes to all of the device's input ports given a Uint8Array or NativeScript buffer containing
-MIDI message bytes.
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>Object</code> |  |
-| [options.bytes] | <code>Uin8Array</code> | MIDI message bytes to send.                                                          Required if `bytesReference` is not provided. |
-| [options.bytesReference] | <code>interop.Reference</code> | NativeScript reference to the buffer containing the MIDI message bytes to send.                                                          Required if `bytes` is not provided |
-| [options.length] | <code>number</code> | Number of bytes. Required if `bytesReference` is provided. |
-
-<a name="_log"></a>
-
-## _log()
-**Kind**: global function  
-**Access:** protected  
-<a name="_warn"></a>
-
-## _warn()
-**Kind**: global function  
-**Access:** protected  
 <a name="send"></a>
 
 ## *send(options) ⇒ <code>Promise</code>*
@@ -284,7 +269,7 @@ A callback that responds to a device change event.
 
 | Type |
 | --- |
-| <code>MidiDevice</code> | 
+| <code>[MidiDevice](#MidiDevice)</code> | 
 
 <a name="midiMessageListener"></a>
 
