@@ -1,8 +1,9 @@
 import { validate, validateAsync } from 'parameter-validator';
 import { convertUint8ArrayToReference } from 'nativescript-utilities';
-import IosMidiPort from './IosMidiPort';
+import MidiInputPort from '../MidiInputPort';
+import IosMidiPortMixin from './IosMidiPortMixin';
 
-export default class IosMidiInputPort extends IosMidiPort  {
+class IosMidiInputPort extends MidiInputPort  {
 
     /**
     * @param {Object}                   options
@@ -11,9 +12,9 @@ export default class IosMidiInputPort extends IosMidiPort  {
     */
     constructor(options) {
 
+        super();
         let { destination, logger } = validate(options, [ 'destination', 'logger' ]);
-        super({ connection: destination, logger });
-
+        this.init({ connection: destination, logger });
         this._destination = destination;
     }
 
@@ -28,6 +29,7 @@ export default class IosMidiInputPort extends IosMidiPort  {
     *                                                          Required if `bytes` is not provided
     * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
     * @returns {Promise}
+    * @override
     */
     send(options) {
 
@@ -49,3 +51,6 @@ export default class IosMidiInputPort extends IosMidiPort  {
         });
     }
 }
+
+IosMidiPortMixin(IosMidiInputPort.prototype);
+export default IosMidiInputPort;

@@ -12,9 +12,13 @@ var _MidiMessageDelegate = require('./MidiMessageDelegate');
 
 var _MidiMessageDelegate2 = _interopRequireDefault(_MidiMessageDelegate);
 
-var _IosMidiPort2 = require('./IosMidiPort');
+var _MidiOutputPort2 = require('../MidiOutputPort');
 
-var _IosMidiPort3 = _interopRequireDefault(_IosMidiPort2);
+var _MidiOutputPort3 = _interopRequireDefault(_MidiOutputPort2);
+
+var _IosMidiPortMixin = require('./IosMidiPortMixin');
+
+var _IosMidiPortMixin2 = _interopRequireDefault(_IosMidiPortMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24,8 +28,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var IosMidiOutputPort = function (_IosMidiPort) {
-    _inherits(IosMidiOutputPort, _IosMidiPort);
+var IosMidiOutputPort = function (_MidiOutputPort) {
+    _inherits(IosMidiOutputPort, _MidiOutputPort);
 
     /**
     * @param {Object}              options
@@ -35,27 +39,23 @@ var IosMidiOutputPort = function (_IosMidiPort) {
     function IosMidiOutputPort(options) {
         _classCallCheck(this, IosMidiOutputPort);
 
+        var _this = _possibleConstructorReturn(this, (IosMidiOutputPort.__proto__ || Object.getPrototypeOf(IosMidiOutputPort)).call(this));
+
         var _validate = (0, _parameterValidator.validate)(options, ['source', 'logger']),
             source = _validate.source,
             logger = _validate.logger;
 
-        var _this = _possibleConstructorReturn(this, (IosMidiOutputPort.__proto__ || Object.getPrototypeOf(IosMidiOutputPort)).call(this, { connection: source, logger: logger }));
-
+        _this.init({ connection: source, logger: logger });
         _this._source = source;
         _this._midiMessageDelegates = []; // Keeps references to delegates so they're not garbage collected.
         return _this;
     }
 
     /**
-    * @callback midiMessageListener
-    * @param {Array.<Uint8Array>} messages   - Array where each item is a Uint8Array containing a MIDI message.
-    * @param {IosMidiOutputPort}  outputPort - Output port from which the bytes were received.
-    */
-
-    /**
     * Adds a listener that handles MIDI message received from the port.
     *
     * @param {midiMessageListener} messageListener - Callback that handles an incoming MIDI message from the port.
+    * @override
     */
 
 
@@ -86,6 +86,7 @@ var IosMidiOutputPort = function (_IosMidiPort) {
     }]);
 
     return IosMidiOutputPort;
-}(_IosMidiPort3.default);
+}(_MidiOutputPort3.default);
 
+(0, _IosMidiPortMixin2.default)(IosMidiOutputPort.prototype);
 exports.default = IosMidiOutputPort;

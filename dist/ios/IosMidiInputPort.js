@@ -10,9 +10,13 @@ var _parameterValidator = require('parameter-validator');
 
 var _nativescriptUtilities = require('nativescript-utilities');
 
-var _IosMidiPort2 = require('./IosMidiPort');
+var _MidiInputPort2 = require('../MidiInputPort');
 
-var _IosMidiPort3 = _interopRequireDefault(_IosMidiPort2);
+var _MidiInputPort3 = _interopRequireDefault(_MidiInputPort2);
+
+var _IosMidiPortMixin = require('./IosMidiPortMixin');
+
+var _IosMidiPortMixin2 = _interopRequireDefault(_IosMidiPortMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,8 +26,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var IosMidiInputPort = function (_IosMidiPort) {
-    _inherits(IosMidiInputPort, _IosMidiPort);
+var IosMidiInputPort = function (_MidiInputPort) {
+    _inherits(IosMidiInputPort, _MidiInputPort);
 
     /**
     * @param {Object}                   options
@@ -33,12 +37,13 @@ var IosMidiInputPort = function (_IosMidiPort) {
     function IosMidiInputPort(options) {
         _classCallCheck(this, IosMidiInputPort);
 
+        var _this = _possibleConstructorReturn(this, (IosMidiInputPort.__proto__ || Object.getPrototypeOf(IosMidiInputPort)).call(this));
+
         var _validate = (0, _parameterValidator.validate)(options, ['destination', 'logger']),
             destination = _validate.destination,
             logger = _validate.logger;
 
-        var _this = _possibleConstructorReturn(this, (IosMidiInputPort.__proto__ || Object.getPrototypeOf(IosMidiInputPort)).call(this, { connection: destination, logger: logger }));
-
+        _this.init({ connection: destination, logger: logger });
         _this._destination = destination;
         return _this;
     }
@@ -54,6 +59,7 @@ var IosMidiInputPort = function (_IosMidiPort) {
     *                                                          Required if `bytes` is not provided
     * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
     * @returns {Promise}
+    * @override
     */
 
 
@@ -86,6 +92,7 @@ var IosMidiInputPort = function (_IosMidiPort) {
     }]);
 
     return IosMidiInputPort;
-}(_IosMidiPort3.default);
+}(_MidiInputPort3.default);
 
+(0, _IosMidiPortMixin2.default)(IosMidiInputPort.prototype);
 exports.default = IosMidiInputPort;

@@ -1,8 +1,9 @@
 import { validate } from 'parameter-validator';
 import MidiMessageDelegate from './MidiMessageDelegate';
-import IosMidiPort from './IosMidiPort';
+import MidiOutputPort from '../MidiOutputPort';
+import IosMidiPortMixin from './IosMidiPortMixin';
 
-export default class IosMidiOutputPort extends IosMidiPort {
+class IosMidiOutputPort extends MidiOutputPort {
 
     /**
     * @param {Object}              options
@@ -11,22 +12,19 @@ export default class IosMidiOutputPort extends IosMidiPort {
     */
     constructor(options) {
 
+        super();
         let { source, logger } = validate(options, [ 'source', 'logger' ]);
-        super({ connection: source, logger });
+        this.init({ connection: source, logger });
         this._source = source;
         this._midiMessageDelegates = []; // Keeps references to delegates so they're not garbage collected.
     }
 
-    /**
-    * @callback midiMessageListener
-    * @param {Array.<Uint8Array>} messages   - Array where each item is a Uint8Array containing a MIDI message.
-    * @param {IosMidiOutputPort}  outputPort - Output port from which the bytes were received.
-    */
 
     /**
     * Adds a listener that handles MIDI message received from the port.
     *
     * @param {midiMessageListener} messageListener - Callback that handles an incoming MIDI message from the port.
+    * @override
     */
     addMessageListener(messageListener) {
 
@@ -48,3 +46,6 @@ export default class IosMidiOutputPort extends IosMidiPort {
         this._log('MIDI message delegate added successfully.');
     }
 }
+
+IosMidiPortMixin(IosMidiOutputPort.prototype);
+export default IosMidiOutputPort;
