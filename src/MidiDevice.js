@@ -1,9 +1,16 @@
 import { NotImplementedError } from './errors';
 
 /**
-* @property {string} name
+* A MIDI device with input ports and output ports through which communication occurs.
 */
 export default class MidiDevice {
+
+    /**
+    * @type {string}
+    */
+    get name() {
+        throw new NotImplementedError();
+    }
 
     /**
     * @type {Array.<MidiInputPort>}

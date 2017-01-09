@@ -11,7 +11,7 @@ var _errors = require('./errors');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
-* @property {string} name
+* A MIDI device with input ports and output ports through which communication occurs.
 */
 var MidiDevice = function () {
     function MidiDevice() {
@@ -97,12 +97,22 @@ var MidiDevice = function () {
             this.logger.warn(this.constructor.name + '::' + this.name + ': ' + message, metadata);
         }
     }, {
-        key: 'inputPorts',
+        key: 'name',
 
+
+        /**
+        * @type {string}
+        */
+        get: function get() {
+            throw new _errors.NotImplementedError();
+        }
 
         /**
         * @type {Array.<MidiInputPort>}
         */
+
+    }, {
+        key: 'inputPorts',
         get: function get() {
             throw new _errors.NotImplementedError();
         }

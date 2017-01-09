@@ -23,11 +23,19 @@ export default class IosMidiDevice extends MidiDevice {
 
         super(options);
         let { name, ports, deviceRef } = validate(options, [ 'name', 'ports', 'deviceRef' ]);
-        this.name = name;
+        this._name = name;
         this.logger = options.logger || new MockLogger();
         this.ios = { deviceRef };
         this._ports = ports;
         this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
+    }
+
+    /**
+    * @type {string}
+    * @override
+    */
+    get name() {
+        return this._name;
     }
 
     /**

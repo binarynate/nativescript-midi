@@ -63,7 +63,7 @@ var IosMidiDevice = function (_MidiDevice) {
             ports = _validate.ports,
             deviceRef = _validate.deviceRef;
 
-        _this.name = name;
+        _this._name = name;
         _this.logger = options.logger || new _MockLogger2.default();
         _this.ios = { deviceRef: deviceRef };
         _this._ports = ports;
@@ -72,7 +72,7 @@ var IosMidiDevice = function (_MidiDevice) {
     }
 
     /**
-    * @type {Array.<IosMidiInputPort>}
+    * @type {string}
     * @override
     */
 
@@ -146,6 +146,17 @@ var IosMidiDevice = function (_MidiDevice) {
         * @param {PGMidi/PGMidi}            options.midiClient
         * @param {Object}                   options.logger
         * @returns {Array.<IosMidiDevice>}
+        */
+
+    }, {
+        key: 'name',
+        get: function get() {
+            return this._name;
+        }
+
+        /**
+        * @type {Array.<IosMidiInputPort>}
+        * @override
         */
 
     }, {
