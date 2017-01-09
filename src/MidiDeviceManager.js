@@ -2,7 +2,7 @@ import MockLogger from './MockLogger';
 import { NotImplementedError } from './errors';
 
 /**
-* Class responsible for fetching available MIDI devices and notifying the application of device changes.
+* @class Responsible for fetching available MIDI devices and notifying the application of device changes.
 */
 export default class MidiDeviceManager {
 
