@@ -2,9 +2,9 @@ import MockLogger from './MockLogger';
 import { NotImplementedError } from './errors';
 
 /**
-* @class Responsible for fetching available MIDI devices and notifying the application of device changes.
+* Responsible for fetching available MIDI devices and notifying the application of device changes.
 */
-export default class MidiDeviceManager {
+class MidiDeviceManager {
 
     /**
     * @param {Object} [options]
@@ -174,3 +174,5 @@ export default class MidiDeviceManager {
         this.logger.warn(`${this.constructor.name}: ${message}`, metadata);
     }
 }
+
+export default MidiDeviceManager;
