@@ -1,6 +1,6 @@
 {
   "name": "nativescript-midi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A NativeScript plugin for communicating with MIDI devices (e.g. musical instruments or apps).",
   "keywords": [
     "NativeScript",
@@ -11,6 +11,7 @@
     "instrument",
     "iOS"
   ],
+  "repository": "https://github.com/BinaryNate/nativescript-midi",
   "main": "dist/index.js",
   "nativescript": {
     "platforms": {

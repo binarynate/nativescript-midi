@@ -13,7 +13,7 @@ This plugin has been designed to allow a uniform interface to be used for MIDI c
 Assuming you've already [installed the NativeScript CLI](http://docs.nativescript.org/start/quick-setup):
 
 ```
-tns plugin install nativescript-midi
+tns plugin add nativescript-midi
 ```
 
 ## Programming interfaces
@@ -25,7 +25,7 @@ An application interacts with the plugin through interfaces which resemble those
 - `MidiInputPort`: Provides a method by which an application can send MIDI messages to the device.
 - `MidiOutputPort`: Notifies the application of messages received from the device.
 
-**For more information on these interfaces, check out the [API docs](docs/api.md).**
+**For more information on these interfaces, check out the [API docs](https://github.com/BinaryNate/nativescript-midi/blob/master/docs/api.md).**
 
 ## Example
 
