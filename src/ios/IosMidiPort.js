@@ -55,14 +55,14 @@ export default class IosMidiPort {
     }
 
     /**
-    * @internal
+    * @protected
     */
     _log(message, metadata) {
         this.logger.info(`${this.constructor.name}::${this.ios.endpointName}::${this.ios.endpointRef}: ${message}`, metadata);
     }
 
     /**
-    * @internal
+    * @protected
     */
     _warn(message, metadata) {
         this.logger.warn(`${this.constructor.name}::${this.ios.endpointName}::${this.ios.endpointRef}: ${message}`, metadata);

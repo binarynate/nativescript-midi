@@ -73,7 +73,7 @@ var IosMidiPort = function () {
         }
 
         /**
-        * @internal
+        * @protected
         */
 
     }, {
@@ -83,7 +83,7 @@ var IosMidiPort = function () {
         }
 
         /**
-        * @internal
+        * @protected
         */
 
     }, {

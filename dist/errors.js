@@ -41,3 +41,20 @@ var MidiError = exports.MidiError = function (_ExtendableError) {
 
     return MidiError;
 }(ExtendableError);
+
+/**
+* Error that indicates that an abstract or unimplemented method has been invoked.
+*/
+
+
+var NotImplementedError = exports.NotImplementedError = function (_ExtendableError2) {
+    _inherits(NotImplementedError, _ExtendableError2);
+
+    function NotImplementedError() {
+        _classCallCheck(this, NotImplementedError);
+
+        return _possibleConstructorReturn(this, (NotImplementedError.__proto__ || Object.getPrototypeOf(NotImplementedError)).apply(this, arguments));
+    }
+
+    return NotImplementedError;
+}(ExtendableError);

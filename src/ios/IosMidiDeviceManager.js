@@ -1,20 +1,21 @@
-/*globals PGMidi */
-/* jshint browser: false */
+/* globals PGMidi */
+import MidiDeviceManager from '../MidiDeviceManager';
 import IosMidiDevice from './IosMidiDevice';
 import IosMidiOutputPort from './IosMidiOutputPort';
 import IosMidiInputPort from './IosMidiInputPort';
 import MidiDeviceDelegate from './MidiDeviceDelegate';
-import MockLogger from '../MockLogger';
 
-export default class IosMidiDeviceManager {
+export default class IosMidiDeviceManager extends MidiDeviceManager {
 
     /**
     * @param {Object} [options]
     * @param {Object} [options.logger] - optional logger that implements the Winston logging
     *                                    interface.
+    * @override
     */
     constructor(options = {}) {
-        this.logger = options.logger || new MockLogger();
+
+        super(options);
         this._midiClient = new PGMidi();
         this._midiClient.networkEnabled = true;
         this._midiClient.virtualDestinationEnabled = true;
@@ -31,67 +32,13 @@ export default class IosMidiDeviceManager {
         );
 
         this._midiClient.delegate = this._midiDeviceDelegate;
-        this._deviceAddedListeners = [];
-        this._deviceRemovedListeners = [];
-        this._deviceUpdatedListeners = [];
-    }
-
-    /**
-    * A callback that responds to a device change event.
-    *
-    * @callback deviceEventCallback
-    * @param {MidiDevice}
-    */
-
-    /**
-    * Registers a callback that is invoked when a device is added.
-    *
-    * @param {deviceEventCallback} callback
-    */
-    addDeviceAddedListener(callback) {
-
-        this._validateEventListener(callback);
-
-        if (!this._deviceAddedListeners.includes(callback)) {
-            this._deviceAddedListeners.push(callback);
-        }
-    }
-
-    /**
-    * Registers a callback that is invoked when a device is removed.
-    *
-    * @param {deviceEventCallback} callback
-    */
-    addDeviceRemovedListener(callback) {
-
-        this._validateEventListener(callback);
-
-        if (!this._deviceRemovedListeners.includes(callback)) {
-            this._deviceRemovedListeners.push(callback);
-        }
-    }
-
-    /**
-    * Registers a callback that is invoked when a device is updated.
-    *
-    * An example of an update is that a device that wasn't previously a MIDI source (i.e. was only
-    * a destination) becomes a MIDI source.
-    *
-    * @param {deviceEventCallback} callback
-    */
-    addDeviceUpdatedListener(callback) {
-
-        this._validateEventListener(callback);
-
-        if (!this._deviceUpdatedListeners.includes(callback)) {
-            this._deviceUpdatedListeners.push(callback);
-        }
     }
 
     /**
     * Gets the available MIDI devices.
     *
     * @returns {Promise.<Array.<IosMidiDevice>>}
+    * @override
     */
     getDevices() {
 
@@ -112,16 +59,8 @@ export default class IosMidiDeviceManager {
     }
 
     /**
-    * Adds the given device to the device list and notifies listeners of the addition.
-    */
-    _addDevice(device) {
-
-        this._devices.push(device);
-        this._notifyDeviceAdded(device);
-    }
-
-    /**
     * @param {IosMidiPort} port
+    * @private
     */
     _addPort(port) {
 
@@ -146,6 +85,7 @@ export default class IosMidiDeviceManager {
 
     /**
     * @param {PGMidi/PGMidiSource} source
+    * @private
     */
     _handleSourceAddedEvent(source) {
 
@@ -157,6 +97,7 @@ export default class IosMidiDeviceManager {
 
     /**
     * @param {PGMidi/PGMidiSource} source
+    * @private
     */
     _handleSourceRemovedEvent(source) {
 
@@ -168,6 +109,7 @@ export default class IosMidiDeviceManager {
 
     /**
     * @param {PGMidi/PGMidiDestination} destination
+    * @private
     */
     _handleDestinationAddedEvent(destination) {
 
@@ -179,6 +121,7 @@ export default class IosMidiDeviceManager {
 
     /**
     * @param {PGMidi/PGMidiDestination} destination
+    * @private
     */
     _handleDestinationRemovedEvent(destination) {
 
@@ -188,56 +131,9 @@ export default class IosMidiDeviceManager {
         this._removePort(port);
     }
 
-    _log(message, metadata) {
-        this.logger.info(`${this.constructor.name}: ${message}`, metadata);
-    }
-
-    _notifyDeviceAdded(device) {
-
-        for (let callback of this._deviceAddedListeners) {
-            try {
-                callback(device);
-            } catch (error) {
-                this.logger.error('A "device added" listener threw an error.', { error });
-            }
-        }
-    }
-
-    _notifyDeviceRemoved(device) {
-
-        for (let callback of this._deviceRemovedListeners) {
-            try {
-                callback(device);
-            } catch (error) {
-                this.logger.error('A "device removed" listener threw an error.', { error });
-            }
-        }
-    }
-
-    _notifyDeviceUpdated(device) {
-
-        for (let callback of this._deviceUpdatedListeners) {
-            try {
-                callback(device);
-            } catch (error) {
-                this.logger.error('A "device updated" listener threw an error.', { error });
-            }
-        }
-    }
-
-    /**
-    * Removes the given device from the device list and notifies listeners of the removal.
-    */
-    _removeDevice(device) {
-
-        this._log(`Removing device '${device.name}'.`);
-        let index = this._devices.indexOf(device);
-        this._devices.splice(index, 1);
-        this._notifyDeviceRemoved(device);
-    }
-
     /**
     * @param {IosMidiPort} port
+    * @private
     */
     _removePort(port) {
 
@@ -257,16 +153,5 @@ export default class IosMidiDeviceManager {
 
         // The device has no ports left, so remove it.
         this._removeDevice(device);
-    }
-
-    _validateEventListener(callback) {
-
-        if (typeof callback !== 'function') {
-            throw new Error('The event listener must be a function.');
-        }
-    }
-
-    _warn(message, metadata) {
-        this.logger.warn(`${this.constructor.name}: ${message}`, metadata);
     }
 }

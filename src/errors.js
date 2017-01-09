@@ -12,3 +12,8 @@ class ExtendableError extends Error {
 }
 
 export class MidiError extends ExtendableError {}
+
+/**
+* Error that indicates that an abstract or unimplemented method has been invoked.
+*/
+export class NotImplementedError extends ExtendableError {}
