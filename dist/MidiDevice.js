@@ -79,6 +79,7 @@ var MidiDevice = function () {
 
         /**
         * @protected
+        * @private
         */
 
     }, {
@@ -89,6 +90,7 @@ var MidiDevice = function () {
 
         /**
         * @protected
+        * @private
         */
 
     }, {

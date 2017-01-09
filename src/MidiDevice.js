@@ -3,7 +3,7 @@ import { NotImplementedError } from './errors';
 /**
 * A MIDI device with input ports and output ports through which communication occurs.
 */
-export default class MidiDevice {
+class MidiDevice {
 
     /**
     * @type {string}
@@ -76,6 +76,7 @@ export default class MidiDevice {
 
     /**
     * @protected
+    * @private
     */
     _log(message, metadata) {
         this.logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
@@ -83,8 +84,11 @@ export default class MidiDevice {
 
     /**
     * @protected
+    * @private
     */
     _warn(message, metadata) {
         this.logger.warn(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
 }
+
+export default MidiDevice;
