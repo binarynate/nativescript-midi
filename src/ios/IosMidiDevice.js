@@ -3,7 +3,6 @@ import MidiDevice from '../MidiDevice';
 import MockLogger from '../MockLogger';
 import IosMidiInputPort from './IosMidiInputPort';
 import IosMidiOutputPort from './IosMidiOutputPort';
-import IosMidiPort from './IosMidiPort';
 
 /**
 * @property {string}                 name
@@ -15,7 +14,7 @@ export default class IosMidiDevice extends MidiDevice {
     /**
     * @param {Object}              options
     * @param {string}              options.name
-    * @param {Array.<IosMidiPort>} options.ports
+    * @param {Array.<IosMidiInputPort|IosMidiOutputPort>} options.ports
     * @param {MIDIDeviceRef}       options.deviceRef
     * @param {Object}              [options.logger] - Optional logger that implements the Winston logging interface.
     */
@@ -60,11 +59,11 @@ export default class IosMidiDevice extends MidiDevice {
 
     /**
     * @private
-    * @param {IosMidiPort} port
+    * @param {IosMidiInputPort|IosMidiOutputPort} port
     */
     addPort(port) {
 
-        if (!(port instanceof IosMidiPort)) {
+        if (!(port instanceof IosMidiInputPort || IosMidiOutputPort)) {
             this._warn('Not adding invalid MIDI input port.', { port });
             return;
         }
@@ -85,7 +84,7 @@ export default class IosMidiDevice extends MidiDevice {
 
     /**
     * @private
-    * @param {IosMidiPort} port
+    * @param {IosMidiInputPort|IosMidiOutputPort} port
     */
     removePort(port) {
 

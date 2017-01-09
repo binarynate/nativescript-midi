@@ -24,10 +24,6 @@ var _IosMidiOutputPort = require('./IosMidiOutputPort');
 
 var _IosMidiOutputPort2 = _interopRequireDefault(_IosMidiOutputPort);
 
-var _IosMidiPort = require('./IosMidiPort');
-
-var _IosMidiPort2 = _interopRequireDefault(_IosMidiPort);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -49,7 +45,7 @@ var IosMidiDevice = function (_MidiDevice) {
     /**
     * @param {Object}              options
     * @param {string}              options.name
-    * @param {Array.<IosMidiPort>} options.ports
+    * @param {Array.<IosMidiInputPort|IosMidiOutputPort>} options.ports
     * @param {MIDIDeviceRef}       options.deviceRef
     * @param {Object}              [options.logger] - Optional logger that implements the Winston logging interface.
     */
@@ -87,11 +83,11 @@ var IosMidiDevice = function (_MidiDevice) {
 
         /**
         * @private
-        * @param {IosMidiPort} port
+        * @param {IosMidiInputPort|IosMidiOutputPort} port
         */
         value: function addPort(port) {
 
-            if (!(port instanceof _IosMidiPort2.default)) {
+            if (!(port instanceof _IosMidiInputPort2.default || _IosMidiOutputPort2.default)) {
                 this._warn('Not adding invalid MIDI input port.', { port: port });
                 return;
             }
@@ -116,7 +112,7 @@ var IosMidiDevice = function (_MidiDevice) {
 
         /**
         * @private
-        * @param {IosMidiPort} port
+        * @param {IosMidiInputPort|IosMidiOutputPort} port
         */
 
     }, {
