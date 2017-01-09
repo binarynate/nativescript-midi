@@ -3,7 +3,7 @@ import { NotImplementedError } from './errors';
 /**
 * The input port of a MIDI device which provides a method by which an application can send MIDI messages to the device.
 */
-export default class MidiInputPort  {
+class MidiInputPort  {
 
     /**
     * Sends the given MIDI bytes to the input port given a Uint8Array or NativeScript buffer containing
@@ -23,3 +23,5 @@ export default class MidiInputPort  {
         return Promise.reject(new NotImplementedError());
     }
 }
+
+export default MidiInputPort;

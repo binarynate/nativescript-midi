@@ -87,6 +87,7 @@ class MidiDeviceManager {
     *
     * @param {MidiDevice} device
     * @protected
+    * @private
     */
     _addDevice(device) {
 
@@ -103,6 +104,7 @@ class MidiDeviceManager {
     *
     * @param {MidiDevice} device
     * @protected
+    * @private
     */
     _notifyDeviceAdded(device) {
 
@@ -120,6 +122,7 @@ class MidiDeviceManager {
     *
     * @param {MidiDevice} device
     * @protected
+    * @private
     */
     _notifyDeviceRemoved(device) {
 
@@ -137,6 +140,7 @@ class MidiDeviceManager {
     *
     * @param {MidiDevice} device
     * @protected
+    * @private
     */
     _notifyDeviceUpdated(device) {
 
@@ -154,6 +158,7 @@ class MidiDeviceManager {
     *
     * @param {MidiDevice} device
     * @protected
+    * @private
     */
     _removeDevice(device) {
 

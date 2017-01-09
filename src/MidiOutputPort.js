@@ -3,7 +3,7 @@ import { NotImplementedError } from './errors';
 /**
 * The output of a MIDI device which notifies the application of messages received from the device.
 */
-export default class MidiOutputPort {
+class MidiOutputPort {
 
     /**
     * @callback midiMessageListener
@@ -22,3 +22,5 @@ export default class MidiOutputPort {
         throw new NotImplementedError();
     }
 }
+
+export default MidiOutputPort;

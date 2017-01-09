@@ -119,6 +119,7 @@ var MidiDeviceManager = function () {
         *
         * @param {MidiDevice} device
         * @protected
+        * @private
         */
 
     }, {
@@ -139,6 +140,7 @@ var MidiDeviceManager = function () {
         *
         * @param {MidiDevice} device
         * @protected
+        * @private
         */
 
     }, {
@@ -180,6 +182,7 @@ var MidiDeviceManager = function () {
         *
         * @param {MidiDevice} device
         * @protected
+        * @private
         */
 
     }, {
@@ -221,6 +224,7 @@ var MidiDeviceManager = function () {
         *
         * @param {MidiDevice} device
         * @protected
+        * @private
         */
 
     }, {
@@ -262,6 +266,7 @@ var MidiDeviceManager = function () {
         *
         * @param {MidiDevice} device
         * @protected
+        * @private
         */
 
     }, {
