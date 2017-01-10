@@ -51,7 +51,7 @@ var MidiMessageDelegate = NSObject.extend({
     _parseMessagesFromPacketList: function _parseMessagesFromPacketList(packetList) {
 
         var messagesNsArray = this._midiParser.parsePacketList(packetList),
-            nsDataMessages = (0, _nativescriptUtilities.convertNSArrayToArray)(messagesNsArray);
+            nsDataMessages = Array.from(messagesNsArray);
 
         return nsDataMessages.map(function (_ref) {
             var bytes = _ref.bytes,
