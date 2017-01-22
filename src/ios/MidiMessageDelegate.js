@@ -28,10 +28,8 @@ const MidiMessageDelegate = NSObject.extend({
         this._log('MIDI packetlist received.');
         let messages = this._parseMessagesFromPacketList(packetList);
         if (messages.length) {
-            this._log(`Parsed ${messages.length} MIDI messages from packetlist.`);
-            return this.messageHandler(messages);
+            this.messageHandler(messages);
         }
-        this._log(`No complete MIDI messages parsed from packetlist.`);
     },
 
     /**
