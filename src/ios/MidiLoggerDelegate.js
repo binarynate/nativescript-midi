@@ -6,7 +6,7 @@ const MidiLoggerDelegate = NSObject.extend({
     /**
     * @param {Logger}                     logger
     */
-    initWithOptions(logger) {
+    initWithLogger(logger) {
 
         let self = this.super.init();
         validate({ logger }, [ 'logger' ], this);

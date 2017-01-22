@@ -8,7 +8,12 @@ var _parameterValidator = require('parameter-validator');
 
 var _nativescriptUtilities = require('nativescript-utilities');
 
-/* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
+var _MidiLoggerDelegate = require('./MidiLoggerDelegate');
+
+var _MidiLoggerDelegate2 = _interopRequireDefault(_MidiLoggerDelegate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var MidiMessageDelegate = NSObject.extend({
 
     /**
@@ -27,6 +32,8 @@ var MidiMessageDelegate = NSObject.extend({
         var self = this.super.init();
         (0, _parameterValidator.validate)({ logger: logger, messageHandler: messageHandler }, ['logger', 'messageHandler'], this);
         this._midiParser = SDMidiParser.alloc().init();
+        var loggerDelegate = _MidiLoggerDelegate2.default.alloc().initWithLogger(logger);
+        this._midiParser.addLoggerDelegate(loggerDelegate);
         return self;
     },
     midiSourceMidiReceived: function midiSourceMidiReceived(midiSource, packetList) {
@@ -70,6 +77,5 @@ var MidiMessageDelegate = NSObject.extend({
             params: [PGMidiSource, new interop.types.ReferenceType(MIDIPacketList)]
         }
     }]
-});
-
+}); /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 exports.default = MidiMessageDelegate;

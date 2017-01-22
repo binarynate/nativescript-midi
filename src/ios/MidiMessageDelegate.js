@@ -1,6 +1,7 @@
 /* globals NSObject, PGMidiSource, MIDIPacketList, interop, PGMidiSourceDelegate, SDMidiParser */
 import { validate } from 'parameter-validator';
 import { convertPointerToUint8Array } from 'nativescript-utilities';
+import MidiLoggerDelegate from './MidiLoggerDelegate';
 
 const MidiMessageDelegate = NSObject.extend({
 
@@ -20,6 +21,8 @@ const MidiMessageDelegate = NSObject.extend({
         let self = this.super.init();
         validate({ logger, messageHandler }, [ 'logger', 'messageHandler' ], this);
         this._midiParser = SDMidiParser.alloc().init();
+        let loggerDelegate = MidiLoggerDelegate.alloc().initWithLogger(logger);
+        this._midiParser.addLoggerDelegate(loggerDelegate);
         return self;
     },
 

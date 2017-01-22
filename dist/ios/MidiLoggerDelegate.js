@@ -11,7 +11,7 @@ var MidiLoggerDelegate = NSObject.extend({
     /**
     * @param {Logger}                     logger
     */
-    initWithOptions: function initWithOptions(logger) {
+    initWithLogger: function initWithLogger(logger) {
 
         var self = this.super.init();
         (0, _parameterValidator.validate)({ logger: logger }, ['logger'], this);
