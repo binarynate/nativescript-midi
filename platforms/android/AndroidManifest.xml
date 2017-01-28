@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-feature android:name="android.software.midi" android:required="true"/>
+
+    <!-- Permissions required for connecting to MIDI over BLE. -->
+    <!-- TODO: Make it so that this is added by the application, not the plugin. -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!-- Per Android's MIDI API documentation: "This LOCATION permission is required because it may be possible to guess the location of an Android device by seeing which BTLE devices are nearby.-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 </manifest>
