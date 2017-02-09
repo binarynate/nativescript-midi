@@ -6,7 +6,7 @@ A basic understanding of the [MIDI (*Musical Instrument Digital Interface*) mess
 
 ## Project status
 
-This plugin has been designed to allow a uniform interface to be used for MIDI communication on both iOS and Android, however only the iOS platform implementation has been finished. Once [the Android implementation](https://github.com/BinaryNate/nativescript-midi/tree/develop-android) is finished and tested, the interface will be considered stable, and the major version will be incremented to 1.0. Until then, breaking changes may still occur while the project is in the 0.x cycle. Contributions are welcome to help with the Android implementation! Check out the [dev status page](https://github.com/BinaryNate/nativescript-midi/blob/master/docs/api.md) for more details.
+This plugin has been designed to allow a uniform interface to be used for MIDI communication on both iOS and Android, however only the iOS platform implementation has been finished. Once [the Android implementation](https://github.com/BinaryNate/nativescript-midi/tree/develop-android) is finished and tested, the interface will be considered stable, and the major version will be incremented to 1.0. Until then, breaking changes may still occur while the project is in the 0.x cycle. Contributions are welcome to help with the Android implementation! Check out the [dev status page](https://github.com/BinaryNate/nativescript-midi/blob/master/docs/dev-status.md) for more details.
 
 ## Installation
 
