@@ -1,9 +1,16 @@
+import { validate } from 'parameter-validator';
 import { NotImplementedError } from './errors';
 
 /**
 * A MIDI device with input ports and output ports through which communication occurs.
 */
 class MidiDevice {
+
+    constructor(options) {
+
+        validate(options, [ 'logger' ], this, { addPrefix: '_' });
+        this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
+    }
 
     /**
     * @type {string}
@@ -58,11 +65,7 @@ class MidiDevice {
     * MIDI message bytes.
     *
     * @param   {Object}            options
-    * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send.
-    *                                                          Required if `bytesReference` is not provided.
-    * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
-    *                                                          Required if `bytes` is not provided
-    * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
+    * @param   {Uin8Array}         options.bytes - MIDI message bytes to send.
     * @returns {Promise}
     */
     send(options) {
@@ -79,7 +82,7 @@ class MidiDevice {
     * @private
     */
     _log(message, metadata) {
-        this.logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
+        this._logger.info(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
 
     /**
@@ -87,7 +90,7 @@ class MidiDevice {
     * @private
     */
     _warn(message, metadata) {
-        this.logger.warn(`${this.constructor.name}::${this.name}: ${message}`, metadata);
+        this._logger.warn(`${this.constructor.name}::${this.name}: ${message}`, metadata);
     }
 }
 

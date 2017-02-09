@@ -13,7 +13,7 @@ class MidiDeviceManager {
     */
     constructor(options = {}) {
         this.logger = options.logger || new MockLogger();
-
+        this._devices = [];
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
@@ -80,6 +80,17 @@ class MidiDeviceManager {
     getDevices() {
 
         return Promise.reject(new NotImplementedError());
+    }
+
+    /**
+    * Navigates to a Page through which the user can view and connect to
+    * Bluetooth Low Energy MIDI devices.
+    *
+    * On iOS, the built-in `CABTMIDICentralViewController` is shown. On Android,
+    * a custom Page is shown which is functionally equivalent to that view controller.
+    */
+    showBluetoothDevicePage() {
+        throw new NotImplementedError();
     }
 
     /**

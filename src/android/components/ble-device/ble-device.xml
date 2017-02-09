@@ -1,0 +1,5 @@
+<GridLayout loaded="onLoaded" class="ble-device" columns="*,*" rows="*" tap="onTap">
+    <Label text="{{ name }}" class="ble-device-name" col="0" row="0" />
+
+    <Label text="{{ status }}" class="ble-device-status" col="1" row="0" />
+</GridLayout>

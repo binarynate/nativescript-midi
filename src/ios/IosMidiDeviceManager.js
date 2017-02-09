@@ -1,4 +1,5 @@
-/* globals PGMidi */
+/* globals PGMidi, CABTMIDICentralViewController */
+import frame from 'ui/frame';
 import MidiDeviceManager from '../MidiDeviceManager';
 import IosMidiDevice from './IosMidiDevice';
 import IosMidiOutputPort from './IosMidiOutputPort';
@@ -56,6 +57,16 @@ export default class IosMidiDeviceManager extends MidiDeviceManager {
 
             return this._devices;
         });
+    }
+
+    /**
+    * @override
+    */
+    showBluetoothDevicePage() {
+
+        this._log('Launching the view controller for managing MIDI devices.');
+        let viewController = new CABTMIDICentralViewController();
+        frame.topmost().ios.controller.pushViewControllerAnimated(viewController, true);
     }
 
     /**

@@ -1,0 +1,19 @@
+<Page navigatingTo="onNavigatingTo"
+      class="ble-devices-page"
+      xmlns:b="dev/android/components/ble-device">
+    <Page.actionBar>
+        <ActionBar title="Bluetooth MIDI Devices">
+        <!-- <ActionItem text="BLE Devices" ios.position="right" tap="showBluetoothDevices"/> -->
+        </ActionBar>
+    </Page.actionBar>
+
+    <StackLayout>
+        <ListView items="{{ devices }}" row="1" visibility="{{ isLoading ? 'collapsed' : 'visible' }}">
+            <ListView.itemTemplate>
+                <b:ble-device dependencies="{{ dependencies }}" />
+            </ListView.itemTemplate>
+        </ListView>
+
+        <ActivityIndicator busy="{{ isLoading }}" />
+    </StackLayout>
+</Page>

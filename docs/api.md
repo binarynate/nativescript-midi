@@ -78,9 +78,7 @@ MIDI message bytes.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> |  |
-| [options.bytes] | <code>Uin8Array</code> | MIDI message bytes to send.                                                          Required if `bytesReference` is not provided. |
-| [options.bytesReference] | <code>interop.Reference</code> | NativeScript reference to the buffer containing the MIDI message bytes to send.                                                          Required if `bytes` is not provided |
-| [options.length] | <code>number</code> | Number of bytes. Required if `bytesReference` is provided. |
+| options.bytes | <code>Uin8Array</code> | MIDI message bytes to send. |
 
 <a name="MidiDeviceManager"></a>
 
@@ -95,6 +93,7 @@ Responsible for fetching available MIDI devices and notifying the application of
     * [.addDeviceRemovedListener(callback)](#MidiDeviceManager+addDeviceRemovedListener)
     * [.addDeviceUpdatedListener(callback)](#MidiDeviceManager+addDeviceUpdatedListener)
     * *[.getDevices()](#MidiDeviceManager+getDevices) ⇒ <code>Promise.&lt;Array.&lt;MidiDevice&gt;&gt;</code>*
+    * [.showBluetoothDevicePage()](#MidiDeviceManager+showBluetoothDevicePage)
 
 <a name="new_MidiDeviceManager_new"></a>
 
@@ -147,6 +146,16 @@ a destination) becomes a MIDI source.
 Gets the available MIDI devices.
 
 **Kind**: instance abstract method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
+<a name="MidiDeviceManager+showBluetoothDevicePage"></a>
+
+### midiDeviceManager.showBluetoothDevicePage()
+Navigates to a Page through which the user can view and connect to
+Bluetooth Low Energy MIDI devices.
+
+On iOS, the built-in `CABTMIDICentralViewController` is shown. On Android,
+a custom Page is shown which is functionally equivalent to that view controller.
+
+**Kind**: instance method of <code>[MidiDeviceManager](#MidiDeviceManager)</code>  
 <a name="MidiInputPort"></a>
 
 ## MidiInputPort
@@ -164,9 +173,7 @@ MIDI message bytes.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> |  |
-| [options.bytes] | <code>Uin8Array</code> | MIDI message bytes to send to the device.                                                          Required if `bytesReference` is not provided. |
-| [options.bytesReference] | <code>interop.Reference</code> | NativeScript reference to the buffer containing the MIDI message bytes to send.                                                          Required if `bytes` is not provided |
-| [options.length] | <code>number</code> | Number of bytes. Required if `bytesReference` is provided. |
+| options.bytes | <code>Uin8Array</code> | MIDI message bytes to send to the device. |
 
 <a name="MidiOutputPort"></a>
 

@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _parameterValidator = require('parameter-validator');
+
 var _errors = require('./errors');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14,9 +16,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 * A MIDI device with input ports and output ports through which communication occurs.
 */
 var MidiDevice = function () {
-    function MidiDevice() {
+    function MidiDevice(options) {
         _classCallCheck(this, MidiDevice);
+
+        (0, _parameterValidator.validate)(options, ['logger'], this, { addPrefix: '_' });
+        this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
     }
+
+    /**
+    * @type {string}
+    */
+
 
     _createClass(MidiDevice, [{
         key: 'addMessageListener',
@@ -56,11 +66,7 @@ var MidiDevice = function () {
         * MIDI message bytes.
         *
         * @param   {Object}            options
-        * @param   {Uin8Array}         [options.bytes]           - MIDI message bytes to send.
-        *                                                          Required if `bytesReference` is not provided.
-        * @param   {interop.Reference} [options.bytesReference]  - NativeScript reference to the buffer containing the MIDI message bytes to send.
-        *                                                          Required if `bytes` is not provided
-        * @param   {number}            [options.length]          - Number of bytes. Required if `bytesReference` is provided.
+        * @param   {Uin8Array}         options.bytes - MIDI message bytes to send.
         * @returns {Promise}
         */
 
@@ -85,7 +91,7 @@ var MidiDevice = function () {
     }, {
         key: '_log',
         value: function _log(message, metadata) {
-            this.logger.info(this.constructor.name + '::' + this.name + ': ' + message, metadata);
+            this._logger.info(this.constructor.name + '::' + this.name + ': ' + message, metadata);
         }
 
         /**
@@ -96,15 +102,10 @@ var MidiDevice = function () {
     }, {
         key: '_warn',
         value: function _warn(message, metadata) {
-            this.logger.warn(this.constructor.name + '::' + this.name + ': ' + message, metadata);
+            this._logger.warn(this.constructor.name + '::' + this.name + ': ' + message, metadata);
         }
     }, {
         key: 'name',
-
-
-        /**
-        * @type {string}
-        */
         get: function get() {
             throw new _errors.NotImplementedError();
         }

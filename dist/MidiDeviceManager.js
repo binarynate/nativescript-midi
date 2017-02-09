@@ -32,7 +32,7 @@ var MidiDeviceManager = function () {
         _classCallCheck(this, MidiDeviceManager);
 
         this.logger = options.logger || new _MockLogger2.default();
-
+        this._devices = [];
         this._deviceAddedListeners = [];
         this._deviceRemovedListeners = [];
         this._deviceUpdatedListeners = [];
@@ -112,6 +112,20 @@ var MidiDeviceManager = function () {
         value: function getDevices() {
 
             return Promise.reject(new _errors.NotImplementedError());
+        }
+
+        /**
+        * Navigates to a Page through which the user can view and connect to
+        * Bluetooth Low Energy MIDI devices.
+        *
+        * On iOS, the built-in `CABTMIDICentralViewController` is shown. On Android,
+        * a custom Page is shown which is functionally equivalent to that view controller.
+        */
+
+    }, {
+        key: 'showBluetoothDevicePage',
+        value: function showBluetoothDevicePage() {
+            throw new _errors.NotImplementedError();
         }
 
         /**

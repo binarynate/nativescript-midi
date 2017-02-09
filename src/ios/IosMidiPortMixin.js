@@ -1,5 +1,4 @@
 /* globals interop, MIDIEndpointGetEntity, MIDIEntityGetDevice */
-
 import { validate } from 'parameter-validator';
 import FunctionalMixin from '../utils/FunctionalMixin';
 

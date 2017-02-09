@@ -35,6 +35,8 @@
     "jshint": "^2.9.4"
   },
   "dependencies": {
+    "nativescript-component": "^1.0.4",
+    "nativescript-permissions": "^1.2.3",
     "nativescript-utilities": "^0.1.0",
     "parameter-validator": "^1.0.0"
   }

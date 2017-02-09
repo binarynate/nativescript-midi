@@ -1,0 +1,30 @@
+
+.ble-devices-page Page {
+    background-color: #EFEFF5;
+}
+
+.ble-devices-page > StackLayout {
+    background-color: #EFEFF5;
+    padding-top: 80;
+}
+
+.ble-device {
+    border-top-width: 1;
+    border-bottom-width: 1;
+    background-color: white;
+    border-color: #C8C7CC;
+}
+
+.ble-device {
+    padding: 20 40 20 40;
+    color: black;
+    font-size: 18;
+}
+
+.ble-device-name {
+
+}
+
+.ble-device-status {
+    text-align: right;
+}

@@ -1,6 +1,5 @@
 import { validate } from 'parameter-validator';
 import MidiDevice from '../MidiDevice';
-import MockLogger from '../MockLogger';
 import IosMidiInputPort from './IosMidiInputPort';
 import IosMidiOutputPort from './IosMidiOutputPort';
 
@@ -20,13 +19,11 @@ export default class IosMidiDevice extends MidiDevice {
     */
     constructor(options) {
 
-        super(options);
+        super(...arguments);
         let { name, ports, deviceRef } = validate(options, [ 'name', 'ports', 'deviceRef' ]);
         this._name = name;
-        this.logger = options.logger || new MockLogger();
         this.ios = { deviceRef };
         this._ports = ports;
-        this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
     }
 
     /**

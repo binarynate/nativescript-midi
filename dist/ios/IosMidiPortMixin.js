@@ -21,7 +21,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * @property {string}                   ios.endpointName
 */
 /* globals interop, MIDIEndpointGetEntity, MIDIEntityGetDevice */
-
 var IosMidiPortMixin = (0, _FunctionalMixin2.default)({
 
     /**

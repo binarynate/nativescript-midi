@@ -12,10 +12,6 @@ var _MidiDevice2 = require('../MidiDevice');
 
 var _MidiDevice3 = _interopRequireDefault(_MidiDevice2);
 
-var _MockLogger = require('../MockLogger');
-
-var _MockLogger2 = _interopRequireDefault(_MockLogger);
-
 var _IosMidiInputPort = require('./IosMidiInputPort');
 
 var _IosMidiInputPort2 = _interopRequireDefault(_IosMidiInputPort);
@@ -52,7 +48,7 @@ var IosMidiDevice = function (_MidiDevice) {
     function IosMidiDevice(options) {
         _classCallCheck(this, IosMidiDevice);
 
-        var _this = _possibleConstructorReturn(this, (IosMidiDevice.__proto__ || Object.getPrototypeOf(IosMidiDevice)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (IosMidiDevice.__proto__ || Object.getPrototypeOf(IosMidiDevice)).apply(this, arguments));
 
         var _validate = (0, _parameterValidator.validate)(options, ['name', 'ports', 'deviceRef']),
             name = _validate.name,
@@ -60,10 +56,8 @@ var IosMidiDevice = function (_MidiDevice) {
             deviceRef = _validate.deviceRef;
 
         _this._name = name;
-        _this.logger = options.logger || new _MockLogger2.default();
         _this.ios = { deviceRef: deviceRef };
         _this._ports = ports;
-        _this._globalMessageListeners = []; // Message listeners that are invoked when any port receives a message.
         return _this;
     }
 
