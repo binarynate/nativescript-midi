@@ -4,9 +4,10 @@ A NativeScript plugin for communicating with MIDI devices (e.g. musical instrume
 
 A basic understanding of the [MIDI (*Musical Instrument Digital Interface*) message protocol](http://www.gweep.net/~prefect/eng/reference/protocol/midispec.html) is required to use this plugin.
 
-## Project status
+## Project status: No Longer Developed / Maintained
 
-This plugin has been designed to allow a uniform interface to be used for MIDI communication on both iOS and Android, however only the iOS platform implementation has been finished. Once [the Android implementation](https://github.com/BinaryNate/nativescript-midi/tree/develop-android) is finished and tested, the interface will be considered stable, and the major version will be incremented to 1.0. Until then, breaking changes may still occur while the project is in the 0.x cycle. Contributions are welcome to help with the Android implementation! Check out the [dev status page](https://github.com/BinaryNate/nativescript-midi/blob/master/docs/dev-status.md) for more details.
+This plugin has been designed to allow a uniform interface to be used for MIDI communication on both iOS and Android, however only the iOS platform implementation has been finished. [I started to develop the Android implementation](https://github.com/BinaryNate/nativescript-midi/tree/develop-android), but I ultimately shifted my focus to a different project, and I currently have no plans to finish development or to maintain it for compatibility with new NativeScript versions (> v2).
+
 
 ## Installation
 
